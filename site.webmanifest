@@ -1,0 +1,15 @@
+{
+  "name": "Street Flow",
+  "short_name": "Street Flow",
+  "description": "Dance classes, wedding & event choreography, and fitness sessions in Pune and online.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0b0b0c",
+  "theme_color": "#0b0b0c",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/android-chrome-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/android-chrome-512.png", "type": "image/png", "sizes": "512x512" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ]
+}

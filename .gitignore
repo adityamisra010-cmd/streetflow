@@ -1,0 +1,16 @@
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*~
+.idea/
+.vscode/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Node (only if tooling is ever added — the site itself ships no dependencies)
+node_modules/
+
+# Vercel
+.vercel
