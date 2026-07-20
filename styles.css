@@ -79,7 +79,7 @@ button{ font:inherit; cursor:pointer; }
   border-bottom:1px solid var(--line);
 }
 .brand{ display:flex; align-items:center; gap:12px; }
-.brand-mark{ width:34px; height:34px; flex:none; }
+.brand-mark{ height:34px; width:auto; flex:none; }
 .brand-name{ font-size:15px; font-weight:700; }
 .nav-links{ display:flex; gap:36px; align-items:center; }
 .nav-links a{ font-size:14px; color:var(--ash); transition:color .3s var(--ease); }
@@ -276,7 +276,7 @@ section{ padding:120px 0; }
 footer{ padding:48px 0; }
 .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:20px; }
 .footer-brand{ display:flex; align-items:center; gap:12px; }
-.footer-brand .brand-mark{ width:26px; height:26px; }
+.footer-brand .brand-mark{ height:24px; width:auto; }
 footer .fine{ font-size:13px; color:var(--ash-dark); }
 .footer-social{ width:36px; height:36px; border:1px solid var(--line-strong); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:border-color .3s var(--ease), transform .3s var(--ease); }
 .footer-social:hover{ border-color:var(--flame-2); transform:translateY(-2px); }
@@ -292,11 +292,15 @@ footer .fine{ font-size:13px; color:var(--ash-dark); }
 }
 .preloader.done{ opacity:0; visibility:hidden; pointer-events:none; }
 .preloader-inner{ display:flex; flex-direction:column; align-items:center; gap:26px; }
-.preloader-mark{ width:118px; height:auto; }
-.preloader-mark path{ stroke-dasharray:1400; stroke-dashoffset:1400; animation:preload-draw 1.8s var(--ease) forwards; }
-.preloader-mark circle{ opacity:0; animation:preload-dot .5s var(--ease) .35s forwards; }
-@keyframes preload-draw{ to{ stroke-dashoffset:0; } }
-@keyframes preload-dot{ to{ opacity:1; } }
+.preloader-mark{
+  width:78px; height:160px; flex:none;
+  background:var(--flow-gradient);
+  -webkit-mask:url(logo-mark.png) center/contain no-repeat;
+  mask:url(logo-mark.png) center/contain no-repeat;
+  clip-path:inset(100% 0 0 0);
+  animation:mark-rise 1.5s var(--ease) .2s forwards;
+}
+@keyframes mark-rise{ to{ clip-path:inset(0 0 0 0); } }
 .preloader-word{
   font-size:20px; font-weight:700; letter-spacing:.26em; color:var(--bone);
   opacity:0; transform:translateY(8px);
@@ -426,6 +430,7 @@ footer .fine{ font-size:13px; color:var(--ash-dark); }
   .chip{ opacity:1 !important; transform:none !important; }
   .spanel{ opacity:1 !important; transform:none !important; }
   .preloader-word{ opacity:1 !important; transform:none !important; }
+  .preloader-mark{ clip-path:none !important; animation:none !important; }
   /* stack the scrolly instead of pinning + scroll-choreographing it */
   .scrolly{ height:auto !important; }
   .scrolly-stage{ position:static !important; height:auto !important; overflow:visible !important; }

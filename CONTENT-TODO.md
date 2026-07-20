@@ -9,21 +9,18 @@ plus `robots.txt` / `sitemap.xml`.
 
 ---
 
-## 1. The real logo — as a FILE  — REQUIRED (highest priority)
+## 1. The real logo — DONE ✅
 
-- **What it is:** You sent the logo as an inline image I can *see*, but it never arrived as a file on
-  disk, so I can't process its pixels into crisp favicons or a draw-animated mark. Right now the animated
-  **preloader** and both **brand-marks** still use the existing flow-figure squiggle as a swappable
-  stand-in, and the favicons are generated from that same mark.
-- **Where it lives:** preloader mark `index.html:48`; nav brand-mark `index.html:87`; footer brand-mark
-  `index.html:357`; `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `android-chrome-192/512.png`,
-  and the `og-image.png` logomark.
-- **What to send me — and what each gets you:**
-  - **SVG (best):** I can wire a true "draw-in" loader animation (the mark strokes itself on in the flame
-    gradient) *and* generate pixel-crisp favicons at every size.
-  - **High-res transparent PNG (good):** I'll CSS-mask it and tint it in the flame gradient (BG colour
-    ignored, per your note), animate a reveal on load, and generate raster favicons.
-  Attach it the way the original `index.html` came through (as a file), not pasted into the chat.
+- You uploaded `Logos-…zip` straight to the repo (commit `8f31b91`). I unpacked it, extracted just the
+  **dancer icon** (dropping the baked-in wordmark, since the site sets "STREET FLOW" in Clash Display),
+  keyed the background to transparent, and wired it in everywhere: the **animated preloader** (the icon
+  rises in the flame gradient on load), the **nav + footer marks**, all **favicons** (`favicon.svg/.ico`,
+  `apple-touch-icon.png`, `android-chrome-192/512.png`), and the **og-image.png**. Derived asset is
+  `logo-mark.png` (white silhouette, transparent).
+- I removed the 2.6 MB source zip from the web root so it isn't served as a public download — it's still
+  in git history at `8f31b91` if you ever need the originals.
+- If you'd rather I use a *vector* (SVG) master for even crisper icons at tiny sizes, send the SVG and
+  I'll regenerate from it — but the current raster extraction already looks clean at every size.
 
 ## 2. Intro film for the landing modal  — REQUIRED
 
