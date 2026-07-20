@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Street Flow — Pune's Dance Hub</title>
-<meta name="description" content="Street Flow — dance classes, wedding & event choreography, and fitness sessions in Pune and online.">
+<meta name="description" content="Street Flow — your one stop dance hub for movement & fitness. Dance classes, wedding & event choreography, online batches, and fitness sessions in Pune, online worldwide, and on the road.">
 <link rel="canonical" href="https://streetflow.vercel.app/">
 
 <!-- theme + icons -->
@@ -18,20 +18,20 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Street Flow">
 <meta property="og:title" content="Street Flow — Pune's Dance Hub">
-<meta property="og:description" content="Dance classes, wedding & event choreography, and fitness sessions in Pune and online.">
+<meta property="og:description" content="Your one stop dance hub for movement & fitness — classes, choreography, online batches, and fitness sessions.">
 <meta property="og:url" content="https://streetflow.vercel.app/">
 <meta property="og:image" content="https://streetflow.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Street Flow — One dance hub. Every reason to move.">
+<meta property="og:image:alt" content="Street Flow — your one stop dance hub for movement & fitness.">
 <meta property="og:locale" content="en_IN">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Street Flow — Pune's Dance Hub">
-<meta name="twitter:description" content="Dance classes, wedding & event choreography, and fitness sessions in Pune and online.">
+<meta name="twitter:description" content="Your one stop dance hub for movement & fitness — classes, choreography, online batches, and fitness sessions.">
 <meta name="twitter:image" content="https://streetflow.vercel.app/og-image.png">
-<meta name="twitter:image:alt" content="Street Flow — One dance hub. Every reason to move.">
+<meta name="twitter:image:alt" content="Street Flow — your one stop dance hub for movement & fitness.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -41,6 +41,46 @@
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
+<!-- ============ PRELOADER (animated logomark; swap SVG for the real logo) ============ -->
+<div class="preloader" id="preloader">
+  <div class="preloader-inner">
+    <svg class="preloader-mark" viewBox="0 0 300 420" fill="none" aria-hidden="true">
+      <path d="M120 40C150 40 165 65 150 90C130 122 90 118 78 150C64 186 100 200 130 190C175 176 168 128 205 118C245 107 268 140 255 175C240 214 190 210 175 245C160 280 195 300 225 288C260 274 250 232 285 224" stroke="url(#preloadgrad)" stroke-width="8" stroke-linecap="round"/>
+      <circle cx="120" cy="30" r="13" fill="url(#preloadgrad)"/>
+      <defs>
+        <linearGradient id="preloadgrad" x1="0" y1="0" x2="300" y2="420" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#ec3f73"/><stop offset="0.6" stop-color="#f4a93b"/><stop offset="1" stop-color="#ffd866"/>
+        </linearGradient>
+      </defs>
+    </svg>
+    <span class="preloader-word display">STREET FLOW</span>
+  </div>
+</div>
+
+<!-- ============ INTRO VIDEO MODAL (placeholder — swap in the real film) ============ -->
+<div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introModalTitle" hidden>
+  <div class="modal-backdrop" data-close></div>
+  <div class="modal-card" role="document">
+    <button class="modal-close" type="button" data-close aria-label="Close video">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+    <h2 id="introModalTitle" class="modal-title display">Welcome to Street Flow</h2>
+    <div class="modal-stage">
+      <!-- PLACEHOLDER: replace this poster block with a <video> or YouTube <iframe> once the intro film is shared -->
+      <div class="modal-poster" data-todo="intro-video">
+        <button class="modal-play" type="button" aria-label="Play intro film">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <span class="mono">Intro film — coming soon</span>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-primary">Enquire / Book a Slot</a>
+      <button class="btn btn-ghost" type="button" data-close>Skip intro</button>
+    </div>
+  </div>
+</div>
 
 <nav class="nav">
   <a href="#home" class="brand">
@@ -53,6 +93,8 @@
   </a>
   <div class="nav-links mono">
     <a href="#services">Services</a>
+    <a href="#styles">Styles</a>
+    <a href="#about">About</a>
     <a href="#watch">Watch</a>
     <a href="#contact">Contact</a>
   </div>
@@ -64,6 +106,8 @@
 
 <div class="mobile-menu display" id="mobileMenu" aria-hidden="true">
   <a href="#services">Services</a>
+  <a href="#styles">Styles</a>
+  <a href="#about">About</a>
   <a href="#watch">Watch</a>
   <a href="#contact">Contact</a>
   <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="nav-cta mono">Enquire</a>
@@ -74,8 +118,8 @@
   <section class="hero" id="home">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow mono"><span class="eyebrow-dot"></span>Pune &amp; Online · Dance Hub</span>
-        <h1 class="display">One dance hub.<br>Every reason<br>to <span class="accent">move.</span></h1>
+        <span class="eyebrow mono"><span class="eyebrow-dot"></span>Pune&nbsp;·&nbsp;Online Sessions Worldwide&nbsp;·&nbsp;Open to Travel</span>
+        <h1 class="display">Your one stop<br><span class="accent">dance hub</span><br>for movement &amp; fitness</h1>
         <p class="hero-sub">Street Flow trains dancers, choreographs weddings and events, and runs fitness sessions built around rhythm — for beginners, couples, and companies who want the real thing.</p>
         <div class="hero-cta">
           <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-primary">Enquire / Book a Slot</a>
@@ -116,7 +160,7 @@
     <div class="wrap">
       <div class="section-head" data-reveal>
         <span class="eyebrow mono">What we do</span>
-        <h2 class="display">Three ways to move with us</h2>
+        <h2 class="display">Four ways to move with us</h2>
         <p>Whichever door you come through, it's the same crew, the same standard.</p>
       </div>
     </div>
@@ -128,49 +172,148 @@
           <p>Hip-hop, freestyle and choreography training for beginners through advanced dancers. Weekly batches, in-studio and online.</p>
           <div class="service-bar"></div>
         </div>
-        <div class="service-card" data-reveal style="--d:120ms">
+        <div class="service-card" data-reveal style="--d:100ms">
           <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M20 30C20 30 8 22 8 14.5C8 9 15 6.5 20 12C25 6.5 32 9 32 14.5C32 22 20 30 20 30Z" stroke="var(--bone)" stroke-width="1.6"/></svg></div>
           <h3>Wedding &amp; Event Choreography</h3>
           <p>Sangeet entries, baraat sets and stage performances — choreographed and rehearsed from scratch for your day.</p>
           <div class="service-bar"></div>
         </div>
-        <div class="service-card" data-reveal style="--d:240ms">
+        <div class="service-card" data-reveal style="--d:200ms">
           <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><path d="M6 21H12L16 12L23 29L27 21H34" stroke="var(--bone)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
           <h3>Fitness Sessions</h3>
           <p>Dance-based fitness for people who'd rather move to a beat than count reps. Full-body, full-energy.</p>
+          <div class="service-bar"></div>
+        </div>
+        <div class="service-card" data-reveal style="--d:300ms">
+          <div class="service-icon"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="12" stroke="var(--bone)" stroke-width="1.6"/><path d="M8 20h24M20 8c3.5 3.2 3.5 20.8 0 24M20 8c-3.5 3.2-3.5 20.8 0 24" stroke="var(--bone)" stroke-width="1.4"/></svg></div>
+          <h3>Online Batches</h3>
+          <p>Live, streamed dance and fitness batches you can join from anywhere in the world — same coaching, straight to your room.</p>
           <div class="service-bar"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <section class="proof">
-    <div class="wrap proof-grid">
-      <div data-reveal>
-        <h2>Documented,<br>not just promised.</h2>
-        <p>Every batch, every wedding set and every event we run ends up on camera. What's on Instagram is what actually happens in the room.</p>
+  <!-- ============ STYLES & FITNESS — interactive tabbed panel ============ -->
+  <section id="styles" class="styles">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">What we teach</span>
+        <h2 class="display">Pick a lane. Or take them all.</h2>
+        <p>From street forms to classical, aerobics to Zumba — tap a track to see everything under it, all on one screen.</p>
       </div>
-      <div data-reveal style="--d:150ms">
-        <div class="stat-row">
-          <div class="stat">
-            <div class="num display"><span class="accent">77</span></div>
-            <div class="label mono">Sessions &amp; shows posted</div>
+
+      <div class="track-tabs mono" role="tablist" aria-label="What we teach" data-reveal>
+        <button class="track-tab is-active" role="tab" id="tab-dance" aria-selected="true" aria-controls="panel-dance">
+          Dance Styles <span class="track-count" id="count-dance">26</span>
+        </button>
+        <button class="track-tab" role="tab" id="tab-fitness" aria-selected="false" aria-controls="panel-fitness" tabindex="-1">
+          Fitness Sessions <span class="track-count" id="count-fitness">10</span>
+        </button>
+        <span class="track-underline" aria-hidden="true"></span>
+      </div>
+
+      <div class="track-panel is-active" id="panel-dance" role="tabpanel" aria-labelledby="tab-dance" tabindex="0">
+        <ul class="chip-grid" data-track="dance">
+          <li class="chip">Breakdancing</li><li class="chip">Locking</li><li class="chip">Popping</li>
+          <li class="chip">Hip Hop</li><li class="chip">Old School Hip Hop</li><li class="chip">Tutting</li>
+          <li class="chip">Animation</li><li class="chip">Krumping</li><li class="chip">House</li>
+          <li class="chip">Waacking</li><li class="chip">Robotics</li><li class="chip">Freestyle</li>
+          <li class="chip">Bhangra</li><li class="chip">Contemporary</li><li class="chip">Jazz</li>
+          <li class="chip">Salsa</li><li class="chip">Garba</li><li class="chip">Dandiya</li>
+          <li class="chip">Lavani</li><li class="chip">Giddha</li><li class="chip">Ghoomar</li>
+          <li class="chip">Bharatanatyam</li><li class="chip">Kathak</li><li class="chip">Semi Classical</li>
+          <li class="chip">Bollywood</li><li class="chip">Lyrical Hip Hop</li>
+        </ul>
+      </div>
+
+      <div class="track-panel" id="panel-fitness" role="tabpanel" aria-labelledby="tab-fitness" tabindex="0" hidden>
+        <ul class="chip-grid" data-track="fitness">
+          <li class="chip">Aerobics</li><li class="chip">Circuits</li><li class="chip">Bollyhop</li>
+          <li class="chip">Crossfit</li><li class="chip">Zumba</li><li class="chip">Functional Workout</li>
+          <li class="chip">Freestyle Hip-Hop</li><li class="chip">Bhangra &amp; Folk</li><li class="chip">Pilates</li>
+          <li class="chip">Stretching</li><li class="chip chip-more">…and many more</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT — intro + pinned founders/achievements scrolly ============ -->
+  <section id="about" class="about">
+    <div class="wrap">
+      <div class="section-head about-head" data-reveal>
+        <span class="eyebrow mono">About us</span>
+        <h2 class="display">What is Street&nbsp;Flow?</h2>
+        <p>We are a community of passionate dancers dedicated to creating a positive, welcoming space where people of all ages and skill levels can learn, grow, and thrive together. At Street Flow, we believe dance is more than just movement — it's a way to express, connect, and grow.</p>
+        <p>Through every class, we aim to inspire confidence, creativity, discipline, and a lifelong love for dance. Whether you're dancing for a performance, fitness, fun, self-expression, or to pursue your passion, we focus on building strong fundamentals while ensuring every class is engaging, energetic, and enjoyable.</p>
+      </div>
+    </div>
+
+    <div class="scrolly" id="scrolly" data-panels="3">
+      <div class="scrolly-stage">
+        <div class="wrap scrolly-inner">
+          <div class="scrolly-aside">
+            <span class="eyebrow mono">Meet the founders</span>
+            <div class="scrolly-dots" role="tablist" aria-label="Founders and achievements">
+              <button class="scrolly-dot is-active" data-i="0" aria-label="Anuj Chopra"></button>
+              <button class="scrolly-dot" data-i="1" aria-label="Anuja VW"></button>
+              <button class="scrolly-dot" data-i="2" aria-label="Achievements since 2024"></button>
+            </div>
           </div>
-          <div class="stat">
-            <div class="num display"><span class="accent">400+</span></div>
-            <div class="label mono">Following the flow</div>
+
+          <div class="scrolly-panels">
+            <!-- Founder 1 -->
+            <article class="spanel is-active" data-panel="0">
+              <div class="founder">
+                <div class="founder-photo" data-todo="photo-anuj" aria-hidden="true"><span class="founder-initials display">AC</span></div>
+                <div class="founder-body">
+                  <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
+                  <h3 class="founder-name display">Anuj Chopra</h3>
+                  <div class="founder-stats">
+                    <span><b class="display">20+</b> yrs dancing</span>
+                    <span><b class="display">8+</b> yrs teaching</span>
+                    <span><b class="display">12+</b> styles</span>
+                  </div>
+                  <p>With over 20 years of dance experience and 8+ years of teaching, Anuj Chopra is trained in 12+ dance styles, from Indian folk to street dance forms. Having trained under renowned dance professionals and performed in numerous competitions, he brings versatility and creativity to every project. As Co-Founder of Street Flow, his vision is to build a vibrant dance community where everyone feels inspired to learn, grow, and express themselves freely.</p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Founder 2 -->
+            <article class="spanel" data-panel="1">
+              <div class="founder">
+                <div class="founder-photo" data-todo="photo-anuja" aria-hidden="true"><span class="founder-initials display">AV</span></div>
+                <div class="founder-body">
+                  <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
+                  <h3 class="founder-name display">Anuja VW</h3>
+                  <div class="founder-stats">
+                    <span><b class="display">21+</b> yrs dancing</span>
+                    <span><b class="display">7+</b> yrs teaching</span>
+                    <span><b class="display">3</b> disciplines</span>
+                  </div>
+                  <p>Dancing since the age of three, Anuja brings over 21 years of dance experience and 7+ years of teaching expertise. Trained in Bharatanatyam, Western, and folk dance styles, she combines technical excellence with expressive artistry in every performance and choreography. As Co-Founder of Street Flow, her vision is to inspire confidence, nurture creativity, and help every dancer discover the joy of movement.</p>
+                </div>
+              </div>
+            </article>
+
+            <!-- Achievements -->
+            <article class="spanel" data-panel="2">
+              <div class="achieve">
+                <span class="achieve-eyebrow mono">Since 2024</span>
+                <h3 class="display">Proof, in numbers.</h3>
+                <div class="achieve-grid">
+                  <div class="achieve-stat"><b class="num display" data-count="700" data-suffix="+">0</b><span>Students trained</span></div>
+                  <div class="achieve-stat"><b class="num display" data-count="25" data-suffix="+">0</b><span>Wedding choreographies</span></div>
+                  <div class="achieve-stat"><b class="num display" data-count="50" data-suffix="+">0</b><span>Events &amp; performances</span></div>
+                  <div class="achieve-stat"><b class="num display" data-count="75" data-suffix="+">0</b><span>Batches &amp; workshops</span></div>
+                  <div class="achieve-stat achieve-stat-wide"><b class="num display" data-count="1500" data-suffix="+">0</b><span>Dance classes conducted</span></div>
+                </div>
+                <div class="tag-row">
+                  <span class="tag">Weddings</span><span class="tag">Corporate Events</span><span class="tag">College Fests</span><span class="tag">Dance Battles</span><span class="tag">Celebrity Sessions</span>
+                </div>
+              </div>
+            </article>
           </div>
-          <div class="stat">
-            <div class="num display">Pune</div>
-            <div class="label mono">Based here, open online</div>
-          </div>
-        </div>
-        <div class="tag-row">
-          <span class="tag">Weddings</span>
-          <span class="tag">Corporate Events</span>
-          <span class="tag">College Fests</span>
-          <span class="tag">Dance Battles</span>
-          <span class="tag">Celebrity Sessions</span>
         </div>
       </div>
     </div>
@@ -184,7 +327,7 @@
         <p>Reels, wedding films, practice clips and reviews — organized on the profile, updated constantly.</p>
       </div>
       <div class="watch-grid">
-        <!-- watch cards populated by JS -->
+        <!-- watch cards populated by JS (script.js → WATCH). Highlight links are placeholders for now. -->
       </div>
     </div>
   </section>
@@ -193,11 +336,16 @@
     <div class="wrap" data-reveal>
       <span class="eyebrow mono" style="border-color:rgba(11,11,12,0.2)">Let's move</span>
       <h2>Ready to join the flow?</h2>
-      <p>Tell us what you're looking for — a class, a wedding set, or a fitness session — and we'll get back to you.</p>
+      <p>Tell us what you're looking for — a class, a wedding set, an online batch, or a fitness session — and we'll get back to you.</p>
       <div class="hero-cta">
         <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-dark">Fill the Enquiry Form</a>
         <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">DM on Instagram</a>
       </div>
+      <!-- PLACEHOLDER contact rows — email / phone / WhatsApp to be supplied by the studio -->
+      <ul class="contact-rows mono" data-todo="contact-details">
+        <li><span class="contact-k">Email</span><span class="contact-v">coming soon</span></li>
+        <li><span class="contact-k">Phone / WhatsApp</span><span class="contact-v">coming soon</span></li>
+      </ul>
     </div>
   </section>
 
@@ -213,9 +361,15 @@
       </svg>
       <span class="fine">Street Flow — Pune. Built for the culture.</span>
     </div>
-    <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram">
-      <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
-    </a>
+    <div class="footer-social-row">
+      <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+      </a>
+      <!-- PLACEHOLDER: set href to the real YouTube channel URL -->
+      <a href="#" class="footer-social" data-todo="youtube-url" aria-label="YouTube (link coming soon)" title="YouTube — link coming soon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="var(--bone)" stroke="none"/></svg>
+      </a>
+    </div>
   </div>
 </footer>
 

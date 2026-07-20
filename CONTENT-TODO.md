@@ -1,88 +1,87 @@
 # CONTENT-TODO — Street Flow
 
-Everything below is a **placeholder or unconfirmed fact** still standing in the shipped site.
-Nothing here was invented or filled with plausible-sounding fiction — each item is waiting on real
-input from the studio. Format for each item: **what it is → where it lives (line ref) → what to send me.**
+Everything below is a **placeholder or unconfirmed fact** still standing in the site.
+Nothing here was invented — each item waits on real input from the studio. Format for each:
+**what it is → where it lives (line ref) → what to send me.**
 
-Line references are against the split files as committed:
-`index.html`, `script.js`, `styles.css`, plus `robots.txt` / `sitemap.xml`.
-
----
-
-## 1. Real photos / reel thumbnails for the "Watch" grid  — REQUIRED
-
-- **What it is:** The "See it live" grid is 8 tiles that are currently just **flame-gradient rectangles**
-  with a category label (Dance Reels, Wedding, Teasers, Practices, Reviews, Events, Celeb Interactions,
-  All Posts). There is **no real imagery** — every tile links to the Instagram profile.
-- **Where it lives:**
-  - Grid container: `index.html:186` (`<div class="watch-grid">`)
-  - Tiles are generated in JS: `script.js:2` (`cats`) and `script.js:3` (`angles`) — the gradient is
-    drawn at `script.js:14` (`<div class="bg" style="background:linear-gradient(...)">`).
-- **What to send me:** 8 real cover images (reel thumbnails / stills), ideally portrait **3:4** to match
-  the tile aspect ratio, plus (optional) the **direct Instagram permalink** for each so a tile can deep-link
-  to that specific reel instead of the profile. Name them by category so I can map them 1:1.
-  I'll swap the gradient `.bg` for real `<img>`s and keep the exact hover/reveal behavior.
-
-## 2. Real testimonial quotes for a Reviews section  — REQUIRED
-
-- **What it is:** There is **no Reviews section with actual quotes**. "Reviews" appears only as a word in
-  the marquee (`index.html:115`) and as one gradient tile in the Watch grid (`script.js:2`), both of which
-  just point at Instagram. No client is quoted anywhere.
-- **Where it lives:** Would slot in as a new section between `#watch` (ends `index.html:189`) and the
-  `#contact` CTA (`index.html:192`).
-- **What to send me:** 3–6 **real** testimonial quotes, each with the person's name and context
-  (e.g. "Sangeet 2025", "Corporate workshop", "Beginner batch"). Only real, attributable quotes — I will
-  not write fake ones. Once you send them I'll build the section in the existing dark/gradient style.
-
-## 3. Phone number / WhatsApp link for direct contact  — REQUIRED
-
-- **What it is:** The only ways to reach the studio are the **Google Form** and an **Instagram DM**.
-  There is no phone number or WhatsApp click-to-chat anywhere.
-- **Where it lives:** Contact/CTA section `index.html:192`; current contact buttons at
-  `index.html:198` (Google Form) and `index.html:199` (Instagram DM). Also referenced in the nav/hero
-  "Enquire" buttons (`index.html:59`, `index.html:69`, `index.html:81`).
-- **What to send me:** The phone number in international format (e.g. `+91 XXXXXXXXXX`). I'll add a
-  `https://wa.me/91XXXXXXXXXX` WhatsApp button (and/or a `tel:` link) alongside the existing buttons —
-  same button styling, opens in a new tab.
-
-## 4. Confirm the stat numbers  — CONFIRM (currently presented as fact)
-
-- **What it is:** Two hard numbers are shown as facts and **will drift over time**:
-  `77` "Sessions & shows posted" and `400+` "Following the flow".
-- **Where it lives:** `index.html:156` (`77`) and `index.html:160` (`400+`).
-- **What to send me:** Confirm these are current, or give me updated figures. (If you'd rather not
-  maintain them by hand, tell me and I can soften the copy so it doesn't go stale — e.g. drop the exact
-  count — but I won't change a stated number without your say-so.)
-
-## 5. Confirm the "EST." badge  — CONFIRM
-
-- **What it is:** The spinning hero badge reads `PUNE · EST. FLOW` — there's **no founding year**, so
-  "EST. FLOW" reads as a placeholder for "EST. <year>".
-- **Where it lives:** `index.html:100`.
-- **What to send me:** The year the studio started (e.g. `EST. 2022`) if you want a real year there, or
-  confirm you want to keep the stylized "EST. FLOW" as-is on purpose.
-
-## 6. Production domain  — REQUIRED before go-live
-
-- **What it is:** The canonical URL, Open Graph / Twitter image URLs, `robots.txt`, and `sitemap.xml`
-  all use a **placeholder domain** `https://streetflow.vercel.app`. Social share previews and the sitemap
-  won't be correct until this is the real domain.
-- **Where it lives:** `index.html:8` (canonical), `index.html:22` (og:url), `index.html:23` (og:image),
-  `index.html:33` (twitter:image); `robots.txt:4`; `sitemap.xml:4`.
-- **What to send me:** The final domain (custom domain like `streetflowdance.com`, or the exact Vercel
-  URL). It's a one-shot find-and-replace across those 6 lines.
+Line references are against the current split files: `index.html`, `styles.css`, `script.js`,
+plus `robots.txt` / `sitemap.xml`.
 
 ---
 
-## Notes / lower-priority (flagging, not inventing)
+## 1. The real logo — as a FILE  — REQUIRED (highest priority)
 
-- **OG image wordmark font (build note):** `og-image.png` reuses your dark background, flame gradient,
-  logomark, and the real hero headline — but the "STREET FLOW" wordmark is set in **Space Grotesk**, not
-  Clash Display, because Fontshare was unreachable from the build sandbox. It looks on-brand, but if you
-  want the wordmark in the exact Clash Display face, say so and I'll regenerate it in an environment that
-  can load Fontshare (or from a Clash Display file you provide).
-- **Physical studio address / map (optional):** The site says "Pune" but lists no street address or
-  Google Maps link. If you run a fixed studio and want walk-ins, send the address and I'll add it to the
-  footer/contact area. Left out for now rather than guessed.
-- **Email contact (optional):** No email is listed (only Form + Instagram + the pending phone/WhatsApp).
-  Send one if you want it added.
+- **What it is:** You sent the logo as an inline image I can *see*, but it never arrived as a file on
+  disk, so I can't process its pixels into crisp favicons or a draw-animated mark. Right now the animated
+  **preloader** and both **brand-marks** still use the existing flow-figure squiggle as a swappable
+  stand-in, and the favicons are generated from that same mark.
+- **Where it lives:** preloader mark `index.html:48`; nav brand-mark `index.html:87`; footer brand-mark
+  `index.html:357`; `favicon.svg`, `favicon.ico`, `apple-touch-icon.png`, `android-chrome-192/512.png`,
+  and the `og-image.png` logomark.
+- **What to send me — and what each gets you:**
+  - **SVG (best):** I can wire a true "draw-in" loader animation (the mark strokes itself on in the flame
+    gradient) *and* generate pixel-crisp favicons at every size.
+  - **High-res transparent PNG (good):** I'll CSS-mask it and tint it in the flame gradient (BG colour
+    ignored, per your note), animate a reveal on load, and generate raster favicons.
+  Attach it the way the original `index.html` came through (as a file), not pasted into the chat.
+
+## 2. Intro film for the landing modal  — REQUIRED
+
+- **What it is:** A dismissible modal auto-opens on landing (once per session) with a placeholder poster
+  reading "Intro film — coming soon."
+- **Where it lives:** poster block `index.html:71` (see comment at `index.html:70`); play handler
+  `script.js:250`.
+- **What to send me:** the intro video file (MP4) to self-host, **or** a YouTube/Vimeo link to embed.
+  I'll drop it into the modal's 16:9 stage and wire the play button. (Say the word if you'd rather it
+  show every visit instead of once per session — one-line change.)
+
+## 3. Founder photos  — REQUIRED
+
+- **What it is:** Anuj's and Anuja's cards use flame-tinted initials tiles ("AC" / "AV") as photo
+  placeholders.
+- **Where it lives:** `index.html:268` (Anuj), `index.html:285` (Anuja).
+- **What to send me:** one real photo each, ideally **portrait 4:5**. I'll swap them into the cards,
+  keeping the rounded frame and the scroll/carousel treatment.
+
+## 4. Email + phone / WhatsApp  — REQUIRED
+
+- **What it is:** Contact still runs through the Google Form + Instagram DM; the email and phone rows read
+  "coming soon."
+- **Where it lives:** `index.html:346` (Email), `index.html:347` (Phone / WhatsApp).
+- **What to send me:** the email address and phone number (international format). I'll turn them into live
+  `mailto:` / `tel:` / `https://wa.me/…` links in the same style.
+
+## 5. YouTube channel URL  — REQUIRED
+
+- **What it is:** A YouTube icon is in the footer but its link is a placeholder (`href="#"`, labelled
+  "link coming soon").
+- **Where it lives:** `index.html:369`.
+- **What to send me:** the channel URL. One-line swap.
+
+## 6. Watch grid — real reels + highlight links  — REQUIRED (you said you'll add videos directly, so low urgency)
+
+- **What it is:** The 8 "See it live" tiles are flame-gradient placeholders; every tile currently links to
+  the Instagram **profile**, not a specific highlight/reel.
+- **Where it lives:** tile data `script.js:11–19` (the `WATCH` array); link assignment `script.js:25`
+  (`// TODO: point each at its specific Instagram highlight/reel`).
+- **What to send me (when ready):** the direct Instagram highlight/reel permalink per tile, and/or real
+  cover images (portrait 3:4). I'll swap the gradients for `<img>`s and point each tile at its own link.
+
+## 7. Production domain  — REQUIRED before go-live
+
+- **What it is:** Canonical / Open Graph / Twitter / `robots.txt` / `sitemap.xml` all use the placeholder
+  `https://streetflow.vercel.app`. Share previews and the sitemap won't be correct until this is real.
+- **Where it lives:** `index.html:8, 22, 23, 33`; `robots.txt:4`; `sitemap.xml:4`.
+- **What to send me:** the final domain — one find-and-replace across those 6 lines.
+
+---
+
+## Notes / lower-priority (flagged, not invented)
+
+- **Reviews / testimonials:** still no section with real quotes (only the "Reviews" label in the marquee /
+  Watch tiles). Send 3–6 real, attributable quotes and I'll build a section in the dark/gradient style.
+- **OG image wordmark:** the share image reuses your dark bg, flame gradient, logomark, and the real hero
+  copy, but the "STREET FLOW" wordmark is set in **Space Grotesk** (Fontshare/Clash Display is unreachable
+  from the build sandbox). I'll regenerate it in the exact face on request or once you send the logo file.
+- **Physical address / map (optional):** the site says "Pune" but lists no street address. Send it if you
+  want walk-ins; left out rather than guessed.
