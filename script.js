@@ -32,7 +32,7 @@
         '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>' +
         '<span class="label">' + item.label + '</span>' +
         '<span class="go">View on Instagram' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';
+        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';
       grid.appendChild(a);
     });
   }
@@ -46,12 +46,15 @@
   /* ---------- Mobile menu ---------- */
   const toggle = $('#navToggle');
   const menu = $('#mobileMenu');
+  const menuBg = [$('main'), $('footer')].filter(Boolean); // content behind the full-screen overlay
   function setMenu(open) {
     menu.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     menu.inert = !open;
+    menuBg.forEach((el) => { el.inert = open; }); // keep focus out of the hidden page
+    document.body.style.overflow = open ? 'hidden' : '';
   }
   if (toggle && menu) {
     setMenu(false);
@@ -105,9 +108,8 @@
       activateTab(tabs[ni]);
     });
     // position the active pill once layout + webfonts are ready; stagger chips on first view
-    const active0 = tabs.find((t) => t.classList.contains('is-active')) || tabs[0];
-    positionUnderline(active0);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => positionUnderline(active0));
+    positionUnderline($('.track-tab.is-active') || tabs[0]);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => positionUnderline($('.track-tab.is-active') || tabs[0]));
     window.addEventListener('resize', () => positionUnderline($('.track-tab.is-active') || tabs[0]));
     const stylesSec = $('#styles');
     if (stylesSec) {
@@ -150,7 +152,11 @@
       if (i === current) return;
       current = i;
       spanels.forEach((p, idx) => p.classList.toggle('is-active', idx === i));
-      sdots.forEach((d, idx) => d.classList.toggle('is-active', idx === i));
+      sdots.forEach((d, idx) => {
+        const on = idx === i;
+        d.classList.toggle('is-active', on);
+        if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
+      });
       if (i === n - 1) runCounts();
     }
     setPanel(0);
@@ -181,14 +187,15 @@
         const d = Math.abs((r.left + r.width / 2) - center);
         if (d < bestD) { bestD = d; best = idx; }
       });
-      sdots.forEach((d, idx) => d.classList.toggle('is-active', idx === best));
-      if (best === n - 1) runCounts();
+      setPanel(best); // keep `current`, is-active and aria-current in sync in mobile mode too
     }
     if (panelsWrap) {
       panelsWrap.addEventListener('scroll', () => {
         if (!cTick) { cTick = true; requestAnimationFrame(() => { onCarousel(); cTick = false; }); }
       }, { passive: true });
     }
+    // re-sync when crossing the desktop/mobile breakpoint
+    mqPin.addEventListener('change', () => { current = -1; if (mqPin.matches) onScroll(); else onCarousel(); });
 
     // dots are clickable in both modes
     sdots.forEach((d) => d.addEventListener('click', () => {
@@ -198,7 +205,7 @@
         const total = scrolly.offsetHeight - window.innerHeight;
         window.scrollTo({ top: top + ((i + 0.5) / n) * total, behavior: 'smooth' });
       } else if (panelsWrap && spanels[i]) {
-        spanels[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        spanels[i].scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
         setPanel(i);
       }
     }));
@@ -240,7 +247,9 @@
     modal.hidden = true;
     document.body.style.overflow = '';
     setBgInert(false);
-    if (lastFocus && lastFocus.focus) lastFocus.focus();
+    // on auto-open, lastFocus is <body>; return focus to a real control instead of dropping it
+    const back = (lastFocus && lastFocus.focus && lastFocus !== document.body) ? lastFocus : $('.brand');
+    if (back && back.focus) back.focus();
   }
   if (modal) {
     $$('[data-close]', modal).forEach((el) => el.addEventListener('click', closeModal));
@@ -249,6 +258,8 @@
     const play = $('.modal-play', modal);
     if (play) play.addEventListener('click', () => { /* TODO: start intro video when provided */ });
   }
+  // placeholder links (e.g. the YouTube "coming soon" icon) must not jump to top
+  $$('a[aria-disabled="true"]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
   function maybeShowIntro() {
     if (!modal) return;
     try {
