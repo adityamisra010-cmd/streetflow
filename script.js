@@ -438,8 +438,9 @@
     if (enquiryBody) enquiryBody.hidden = true;
     if (enquirySuccess) {
       enquirySuccess.hidden = false;
-      var back = enquirySuccess.querySelector('.success-close');
-      if (back && back.focus) back.focus();
+      // move focus to the confirmation heading so screen readers announce it
+      var heading = enquirySuccess.querySelector('#successHeading') || enquirySuccess.querySelector('h2');
+      if (heading && heading.focus) heading.focus();
     }
     setSubmitting(false);
     if (form) form.reset();
