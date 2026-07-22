@@ -52,10 +52,10 @@ button{ font:inherit; cursor:pointer; }
   outline:2px solid var(--flame-3);
   outline-offset:3px;
 }
-/* on light (bone) sections the yellow outline is invisible — use a dark one */
+/* on light (bone) sections the yellow outline is invisible, so use a dark one */
 .cta-section :focus-visible{ outline-color:var(--ink); }
 
-/* skip link — first focusable element, hidden until focused */
+/* skip link, first focusable element, hidden until focused */
 .skip-link{
   position:fixed; top:10px; left:10px; z-index:2000;
   background:var(--bone); color:var(--ink);
@@ -331,7 +331,7 @@ footer .fine{ font-size:13px; color:var(--ash); }
 .modal-poster .mono{ font-size:12px; }
 .modal-actions{ display:flex; gap:12px; margin-top:20px; flex-wrap:wrap; }
 
-/* ================= STYLES & FITNESS — tabbed panel ================= */
+/* ================= STYLES & FITNESS, tabbed panel ================= */
 .track-tabs{ position:relative; display:inline-flex; gap:6px; margin-bottom:44px; border:1px solid var(--line-strong); border-radius:100px; padding:6px; max-width:100%; }
 .track-tab{ position:relative; z-index:1; border:none; background:transparent; color:var(--ash); padding:12px 22px; border-radius:100px; font-size:13px; letter-spacing:.08em; display:inline-flex; align-items:center; gap:10px; transition:color .35s var(--ease); white-space:nowrap; }
 .track-tab.is-active{ color:var(--ink); }
@@ -352,7 +352,7 @@ footer .fine{ font-size:13px; color:var(--ash); }
 .chip-more{ background:transparent; color:var(--ash); font-style:italic; }
 .chip-more:hover{ background:transparent; color:var(--bone); transform:none; border-color:var(--line-strong); }
 
-/* ================= ABOUT — intro + scrollytelling ================= */
+/* ================= ABOUT, intro + scrollytelling ================= */
 .about-head{ max-width:760px; }
 .about-head p + p{ margin-top:14px; }
 
@@ -454,4 +454,166 @@ footer .fine{ font-size:13px; color:var(--ash); }
   .scrolly-stage{ position:static !important; height:auto !important; overflow:visible !important; }
   .scrolly-panels{ display:block !important; }
   .spanel{ position:relative !important; grid-area:auto !important; margin-bottom:40px; }
+}
+
+/* =================================================================
+   NEW COMPONENTS (redesign): logo-video, buttons, hero social proof,
+   enquiry modal + form, 3-button pyramid, sticky CTA, watch teasers,
+   testimonials, live contact links.
+   ================================================================= */
+
+/* brand mark can be a looping video (CONFIG.LOGO_VIDEO_SRC); falls back to the logo image */
+.brand-mark-wrap{ display:inline-flex; align-items:center; }
+video.brand-mark{ height:34px; width:auto; object-fit:contain; border-radius:4px; }
+
+/* extra button variants */
+.btn-light{ background:var(--bone); color:var(--ink); }
+.btn-light:hover{ transform:translateY(-3px); box-shadow:0 14px 34px rgba(237,231,216,0.18); }
+.btn-social{ border:1px solid var(--line-strong); color:var(--bone); background:transparent; }
+.btn-social svg{ width:18px; height:18px; }
+.btn-social:hover{ border-color:var(--flame-2); background:rgba(237,231,216,0.05); transform:translateY(-3px); }
+
+/* tighten the void under the (short) fitness panel so the tab switch does not leave a big gap */
+.styles{ padding-bottom:clamp(72px,8vw,96px); }
+
+/* hero social proof */
+.hero-microcopy{ margin-top:16px; font-size:11px; color:var(--ash-dark); letter-spacing:.06em; }
+.hero-stats{
+  list-style:none; display:flex; flex-wrap:wrap; gap:14px 30px;
+  margin-top:30px; padding-top:24px; border-top:1px solid var(--line);
+}
+.hero-stats li{ font-size:11px; color:var(--ash); letter-spacing:.05em; display:flex; flex-direction:column; gap:3px; }
+.hero-stats b{ font-size:24px; color:var(--bone); letter-spacing:-.02em; line-height:1; }
+
+/* modal lead paragraph + tighter title */
+.modal-title{ margin-bottom:8px; }
+.modal-lead{ color:var(--ash); font-size:14.5px; line-height:1.55; margin-bottom:18px; padding-right:44px; max-width:58ch; }
+
+/* three-button pyramid (intro modal + success state) */
+.pyramid{ display:flex; flex-direction:column; align-items:center; gap:12px; margin-top:22px; }
+.pyramid-top{ min-width:min(260px,100%); justify-content:center; }
+.pyramid-base{ display:flex; gap:12px; width:100%; }
+.pyramid-base .btn{ flex:1; justify-content:center; }
+
+/* ---------- enquiry modal + form ---------- */
+.enquiry-card{ width:min(560px,100%); }
+.enquiry-eyebrow{ color:var(--flame-2); border-color:var(--line-strong); margin-bottom:16px; }
+.enquiry-proof{
+  list-style:none; display:flex; flex-wrap:wrap; gap:8px 20px;
+  margin-top:18px; padding:14px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+  font-size:11px; color:var(--ash); letter-spacing:.04em;
+}
+.enquiry-proof b{ color:var(--bone); }
+
+.enquiry-form{ margin-top:22px; display:flex; flex-direction:column; gap:16px; }
+.field{ display:flex; flex-direction:column; gap:7px; }
+.field-row{ display:flex; gap:16px; }
+.field-row .field{ flex:1; min-width:0; }
+.field-sm{ flex:0 0 120px; max-width:120px; }
+.field label{ font-size:12.5px; color:var(--bone); font-weight:500; }
+.field .req{ color:var(--flame-1); }
+.field .opt{ color:var(--ash-dark); font-weight:400; font-size:11px; }
+.enquiry-form input, .enquiry-form select, .enquiry-form textarea{
+  width:100%; background:var(--ink); color:var(--bone);
+  border:1px solid var(--line-strong); border-radius:11px;
+  padding:12px 14px; font-family:inherit; font-size:15px;
+  transition:border-color .25s var(--ease), box-shadow .25s var(--ease);
+}
+.enquiry-form input::placeholder, .enquiry-form textarea::placeholder{ color:var(--ash-dark); }
+.enquiry-form input:focus, .enquiry-form select:focus, .enquiry-form textarea:focus{
+  outline:none; border-color:var(--flame-2); box-shadow:0 0 0 3px rgba(244,169,59,.18);
+}
+.enquiry-form select{
+  appearance:none; -webkit-appearance:none; cursor:pointer; padding-right:38px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%239a968c' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center; background-size:16px;
+}
+.enquiry-form select:required:invalid{ color:var(--ash-dark); }
+.enquiry-form option{ color:var(--bone); background:var(--ink-2); }
+.enquiry-form textarea{ resize:vertical; min-height:54px; }
+.enquiry-form .field.field-error input,
+.enquiry-form .field.field-error select{ border-color:#ff7a90; box-shadow:0 0 0 3px rgba(255,122,144,.15); }
+.hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+.enquiry-error{ color:#ff8098; font-size:13px; margin:-4px 0 0; }
+.enquiry-submit{ justify-content:center; width:100%; margin-top:4px; }
+.enquiry-submit[disabled]{ opacity:.65; cursor:progress; transform:none; box-shadow:none; }
+.enquiry-fineprint{ text-align:center; font-size:10px; color:var(--ash-dark); letter-spacing:.05em; margin-top:2px; }
+
+/* enquiry success state */
+.enquiry-success{ text-align:center; padding:8px 0 4px; }
+.success-mark{
+  width:66px; height:66px; border-radius:50%; margin:0 auto 18px;
+  background:var(--flow-gradient); color:var(--ink);
+  display:flex; align-items:center; justify-content:center;
+}
+.success-mark svg{ width:30px; height:30px; }
+.enquiry-success h2{ font-size:clamp(30px,5vw,40px); font-weight:600; }
+.enquiry-success p{ color:var(--ash); margin:12px auto 22px; max-width:420px; line-height:1.6; font-size:15px; }
+.success-links{ max-width:360px; margin:0 auto 16px; }
+
+/* ---------- sticky enquire button ---------- */
+.sticky-cta{
+  position:fixed; z-index:90; isolation:isolate;
+  right:clamp(16px,3vw,28px);
+  bottom:clamp(16px,3vw,28px);
+  bottom:calc(clamp(16px,3vw,28px) + env(safe-area-inset-bottom));
+  display:inline-flex; align-items:center; gap:9px;
+  padding:14px 22px; border-radius:100px; border:none;
+  background:var(--flow-gradient); color:var(--ink); font-weight:700; font-size:14px;
+  box-shadow:0 12px 30px rgba(236,63,115,.32);
+  transform:translateY(120%); opacity:0;
+  transition:transform .5s var(--ease), opacity .5s var(--ease), box-shadow .3s var(--ease);
+}
+.sticky-cta.show{ transform:translateY(0); opacity:1; }
+.sticky-cta::before{
+  content:''; position:absolute; inset:0; border-radius:inherit; z-index:-1;
+  background:var(--flame-1); animation:sticky-pulse 2.8s var(--ease) infinite;
+}
+@keyframes sticky-pulse{ 0%{ transform:scale(1); opacity:.45; } 70%,100%{ transform:scale(1.4); opacity:0; } }
+.sticky-cta:hover{ transform:translateY(-3px); box-shadow:0 18px 42px rgba(236,63,115,.45); }
+.sticky-cta-icon{ width:18px; height:18px; flex:none; }
+
+/* ---------- watch teasers ---------- */
+.watch-card video, .watch-card img.cover{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.watch-card .scrim{ position:absolute; inset:0; background:linear-gradient(to top, rgba(8,8,9,.74), rgba(8,8,9,.12) 46%, transparent 72%); }
+.watch-card.has-media .label{ color:var(--bone); }
+.watch-card.has-media .go{ color:rgba(237,231,216,.92); }
+.watch-cta{ display:flex; gap:14px; justify-content:center; margin-top:44px; flex-wrap:wrap; }
+
+/* ---------- reviews / testimonials ---------- */
+.reviews-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.review-card{
+  background:var(--ink-2); border:1px solid var(--line); border-radius:18px;
+  padding:28px; display:flex; flex-direction:column; gap:15px;
+}
+.review-stars{ color:var(--flame-2); letter-spacing:3px; font-size:15px; }
+.review-card blockquote{ color:var(--bone); font-size:15px; line-height:1.65; }
+.review-card figcaption{ display:flex; flex-direction:column; gap:3px; margin-top:auto; }
+.review-name{ font-size:16px; font-weight:600; }
+.review-meta{ font-size:11px; color:var(--ash); }
+[data-todo="testimonials"] .review-card{ border-style:dashed; }
+
+/* ---------- live contact links ---------- */
+.contact-rows a.contact-v{
+  color:var(--ink); font-weight:700; text-decoration:none;
+  border-bottom:1px solid rgba(11,11,12,.28); transition:border-color .25s var(--ease);
+}
+.contact-rows a.contact-v:hover{ border-color:var(--ink); }
+
+/* ---------- responsive: new pieces ---------- */
+@media (max-width:900px){
+  .reviews-grid{ grid-template-columns:1fr; }
+}
+@media (max-width:560px){
+  .field-row{ flex-direction:column; gap:16px; }
+  .field-sm{ flex:1; max-width:none; }
+  .hero-stats{ gap:12px 22px; }
+  .hero-stats b{ font-size:21px; }
+  .sticky-cta{ padding:12px 18px; font-size:13px; }
+}
+
+/* reduced motion: sticky pulse + reveal off */
+@media (prefers-reduced-motion: reduce){
+  .sticky-cta::before{ animation:none !important; display:none; }
+  .sticky-cta{ transform:none !important; opacity:1 !important; transition:none !important; }
 }

@@ -1,84 +1,89 @@
-# CONTENT-TODO — Street Flow
+# CONTENT-TODO - Street Flow
 
-Everything below is a **placeholder or unconfirmed fact** still standing in the site.
-Nothing here was invented — each item waits on real input from the studio. Format for each:
-**what it is → where it lives (line ref) → what to send me.**
+What still needs real input from the studio. Everything else in this redesign is built and working.
+Format for each: **what it is, where it lives, what to send me.**
 
-Line references are against the current split files: `index.html`, `styles.css`, `script.js`,
-plus `robots.txt` / `sitemap.xml`.
+Line references are approximate (against `index.html`, `styles.css`, `script.js`).
 
 ---
 
-## 1. The real logo — DONE ✅
+## Set these in one place: `script.js` → `CONFIG` (top of file)
 
-- You uploaded `Logos-…zip` straight to the repo (commit `8f31b91`). I unpacked it, extracted just the
-  **dancer icon** (dropping the baked-in wordmark, since the site sets "STREET FLOW" in Clash Display),
-  keyed the background to transparent, and wired it in everywhere: the **animated preloader** (the icon
-  rises in the flame gradient on load), the **nav + footer marks**, all **favicons** (`favicon.svg/.ico`,
-  `apple-touch-icon.png`, `android-chrome-192/512.png`), and the **og-image.png**. Derived asset is
-  `logo-mark.png` (white silhouette, transparent).
-- I removed the 2.6 MB source zip from the web root so it isn't served as a public download — it's still
-  in git history at `8f31b91` if you ever need the originals.
-- If you'd rather I use a *vector* (SVG) master for even crisper icons at tiny sizes, send the SVG and
-  I'll regenerate from it — but the current raster extraction already looks clean at every size.
+The whole site is wired to a single config block. Fill these in and the features light up:
 
-## 2. Intro film for the landing modal  — REQUIRED
-
-- **What it is:** A dismissible modal auto-opens on landing (once per session) with a placeholder poster
-  reading "Intro film — coming soon."
-- **Where it lives:** poster block `index.html:71` (see comment at `index.html:70`); play handler
-  `script.js:250`.
-- **What to send me:** the intro video file (MP4) to self-host, **or** a YouTube/Vimeo link to embed.
-  I'll drop it into the modal's 16:9 stage and wire the play button. (Say the word if you'd rather it
-  show every visit instead of once per session — one-line change.)
-
-## 3. Founder photos  — REQUIRED
-
-- **What it is:** Anuj's and Anuja's cards use flame-tinted initials tiles ("AC" / "AV") as photo
-  placeholders.
-- **Where it lives:** `index.html:268` (Anuj), `index.html:285` (Anuja).
-- **What to send me:** one real photo each, ideally **portrait 4:5**. I'll swap them into the cards,
-  keeping the rounded frame and the scroll/carousel treatment.
-
-## 4. Email + phone / WhatsApp  — REQUIRED
-
-- **What it is:** Contact still runs through the Google Form + Instagram DM; the email and phone rows read
-  "coming soon."
-- **Where it lives:** `index.html:346` (Email), `index.html:347` (Phone / WhatsApp).
-- **What to send me:** the email address and phone number (international format). I'll turn them into live
-  `mailto:` / `tel:` / `https://wa.me/…` links in the same style.
-
-## 5. YouTube channel URL  — REQUIRED
-
-- **What it is:** A YouTube icon is in the footer but its link is a placeholder (`href="#"`, labelled
-  "link coming soon").
-- **Where it lives:** `index.html:369`.
-- **What to send me:** the channel URL. One-line swap.
-
-## 6. Watch grid — real reels + highlight links  — REQUIRED (you said you'll add videos directly, so low urgency)
-
-- **What it is:** The 8 "See it live" tiles are flame-gradient placeholders; every tile currently links to
-  the Instagram **profile**, not a specific highlight/reel.
-- **Where it lives:** tile data `script.js:11–19` (the `WATCH` array); link assignment `script.js:25`
-  (`// TODO: point each at its specific Instagram highlight/reel`).
-- **What to send me (when ready):** the direct Instagram highlight/reel permalink per tile, and/or real
-  cover images (portrait 3:4). I'll swap the gradients for `<img>`s and point each tile at its own link.
-
-## 7. Production domain  — REQUIRED before go-live
-
-- **What it is:** Canonical / Open Graph / Twitter / `robots.txt` / `sitemap.xml` all use the placeholder
-  `https://streetflow.vercel.app`. Share previews and the sitemap won't be correct until this is real.
-- **Where it lives:** `index.html:8, 22, 23, 33`; `robots.txt:4`; `sitemap.xml:4`.
-- **What to send me:** the final domain — one find-and-replace across those 6 lines.
+| Key | What it turns on | Status |
+|---|---|---|
+| `SHEET_ENDPOINT` | Sends the Enquiry form to your Google Sheet | **Needed** - see `BACKEND-SETUP.md` |
+| `INTRO_VIDEO_SRC` or `INTRO_VIDEO_YT` | The film inside the welcome pop-up | **Needed** |
+| `LOGO_VIDEO_SRC` | Replaces the header logo with a looping video on arrival | Optional |
+| `INSTAGRAM_URL` / `YOUTUBE_URL` | Social links across the site | **Done** (set to your handles) |
 
 ---
 
-## Notes / lower-priority (flagged, not invented)
+## 1. Enquiry backend (Google Sheets) - action needed
 
-- **Reviews / testimonials:** still no section with real quotes (only the "Reviews" label in the marquee /
-  Watch tiles). Send 3–6 real, attributable quotes and I'll build a section in the dark/gradient style.
-- **OG image wordmark:** the share image reuses your dark bg, flame gradient, logomark, and the real hero
-  copy, but the "STREET FLOW" wordmark is set in **Space Grotesk** (Fontshare/Clash Display is unreachable
-  from the build sandbox). I'll regenerate it in the exact face on request or once you send the logo file.
-- **Physical address / map (optional):** the site says "Pune" but lists no street address. Send it if you
-  want walk-ins; left out rather than guessed.
+- **What it is:** The Enquire button no longer goes to a Google Form. It opens a form **inside the site**
+  (name, phone/WhatsApp, email, age, location, what they're looking for, number of sessions, message) and
+  posts straight to your Google Sheet.
+- **What to do:** Follow `BACKEND-SETUP.md` (5 minutes), then paste the URL into `CONFIG.SHEET_ENDPOINT`.
+  Until then the form still works for demos and just warns in the browser console that nothing was delivered.
+
+## 2. Intro film for the welcome pop-up - action needed
+
+- **What it is:** A dismissible pop-up opens once per session with a play button and a 3-button pyramid
+  (Enquire on top, Instagram + YouTube below).
+- **What to send me / do:** an MP4 to self-host (set `CONFIG.INTRO_VIDEO_SRC = 'intro.mp4'`) **or** a YouTube
+  id (set `CONFIG.INTRO_VIDEO_YT = 'xxxx'`). The play button then plays it. No file? It shows a tasteful
+  "coming soon" placeholder.
+
+## 3. Logo-as-video on arrival - optional
+
+- **What it is:** The header logo can become a short looping muted video when someone lands.
+- **What to send me / do:** a small looping MP4 (transparent or on-brand background), then set
+  `CONFIG.LOGO_VIDEO_SRC = 'logo-motion.mp4'`. Poster falls back to the current `logo-mark.png`, so it never
+  looks broken.
+
+## 4. Watch / "See it live" teasers - low urgency
+
+- **What it is:** The tiles support a short **teaser video loop** OR a **cover image**, and each links to the
+  full post. Right now they're flame-gradient placeholders linking to the Instagram profile, plus buttons to
+  Instagram and YouTube below the grid.
+- **Recommended approach (my pick):** upload short 5-10s **teasers** (muted, looping) to the site and link
+  each tile to the full reel on Instagram/YouTube. Motion pulls the eye far better than a static image, the
+  page stays light, and the full videos still drive follows/subscribers where the algorithm rewards them.
+- **What to send me:** per tile, a short MP4 teaser (or a cover image, portrait 3:4) and the direct
+  reel/highlight link. I'll drop them into the `WATCH` array in `script.js`.
+
+## 5. Founder photos - action needed
+
+- **What it is:** Anuj's and Anuja's cards use flame-tinted initials ("AC" / "AV") as photo placeholders.
+- **Where:** `index.html` founder cards.
+- **What to send me:** one real photo each, portrait 4:5.
+
+## 6. Real testimonials - action needed (placeholder is live)
+
+- **What it is:** A new **Reviews** section is in place with three dashed placeholder cards (and a nav link).
+- **What to send me:** 3-6 real quotes with a first name + context (e.g. "Dance Class · Pune", "Wedding
+  Choreography"). Screenshots of Instagram/Google reviews work too; I'll format them to match.
+
+## 7. Production domain - before go-live
+
+- **What it is:** Canonical / Open Graph / Twitter / `robots.txt` / `sitemap.xml` still use the placeholder
+  `https://streetflow.vercel.app`.
+- **What to send me:** the final domain - one find-and-replace.
+
+---
+
+## Done in this pass ✅
+
+- Removed **all em dashes** across the site copy.
+- **Enquiry form moved on-site** (no more Google Form redirect); posts to Google Sheets; spam honeypot;
+  graceful failure fallback to WhatsApp/email.
+- **Neuromarketing layer** (honest, no dark patterns): social-proof stats, low-friction micro-commitment,
+  small-batch scarcity, reassurance microcopy, warm success screen.
+- **Enquire removed from the top nav**, added as a **sticky button (bottom-right)** with an attention pulse.
+- **Intro pop-up** rebuilt: video-ready stage + **3-button pyramid** (Enquire / Instagram / YouTube).
+- **Dance Styles** now has an italic "…and many more" chip (matching Fitness); tightened the gap under the
+  short Fitness panel.
+- **Live contact:** email `streetflowdance@gmail.com`, phone `+91 85719 09482`, WhatsApp `wa.me/918571909482`.
+- **YouTube** button now links to `youtube.com/@streetflowdance` (footer + pyramid).

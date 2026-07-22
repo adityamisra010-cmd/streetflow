@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Street Flow — Pune's Dance Hub</title>
-<meta name="description" content="Street Flow — your one stop dance hub for movement & fitness. Dance classes, wedding & event choreography, online batches, and fitness sessions in Pune, online worldwide, and on the road.">
+<title>Street Flow · Pune's Dance Hub</title>
+<meta name="description" content="Street Flow, your one stop dance hub for movement and fitness. Dance classes, wedding and event choreography, online batches, and fitness sessions in Pune, online worldwide, and on the road.">
 <link rel="canonical" href="https://streetflow.vercel.app/">
 
 <!-- theme + icons -->
@@ -17,21 +17,21 @@
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Street Flow">
-<meta property="og:title" content="Street Flow — Pune's Dance Hub">
-<meta property="og:description" content="Your one stop dance hub for movement & fitness — classes, choreography, online batches, and fitness sessions.">
+<meta property="og:title" content="Street Flow · Pune's Dance Hub">
+<meta property="og:description" content="Your one stop dance hub for movement and fitness. Classes, choreography, online batches, and fitness sessions.">
 <meta property="og:url" content="https://streetflow.vercel.app/">
 <meta property="og:image" content="https://streetflow.vercel.app/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Street Flow — your one stop dance hub for movement & fitness.">
+<meta property="og:image:alt" content="Street Flow, your one stop dance hub for movement and fitness.">
 <meta property="og:locale" content="en_IN">
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Street Flow — Pune's Dance Hub">
-<meta name="twitter:description" content="Your one stop dance hub for movement & fitness — classes, choreography, online batches, and fitness sessions.">
+<meta name="twitter:title" content="Street Flow · Pune's Dance Hub">
+<meta name="twitter:description" content="Your one stop dance hub for movement and fitness. Classes, choreography, online batches, and fitness sessions.">
 <meta name="twitter:image" content="https://streetflow.vercel.app/og-image.png">
-<meta name="twitter:image:alt" content="Street Flow — your one stop dance hub for movement & fitness.">
+<meta name="twitter:image:alt" content="Street Flow, your one stop dance hub for movement and fitness.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,7 +52,8 @@
   </div>
 </div>
 
-<!-- ============ INTRO VIDEO MODAL (placeholder — swap in the real film) ============ -->
+<!-- ============ INTRO VIDEO MODAL ============ -->
+<!-- The intro film + logo motion are wired but off until you drop the files in and set them in script.js CONFIG. -->
 <div class="modal" id="introModal" role="dialog" aria-modal="true" aria-labelledby="introModalTitle" hidden>
   <div class="modal-backdrop" data-close></div>
   <div class="modal-card" role="document">
@@ -60,25 +61,148 @@
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
     <h2 id="introModalTitle" class="modal-title display">Welcome to Street Flow</h2>
-    <div class="modal-stage">
-      <!-- PLACEHOLDER: replace this poster block with a <video> or YouTube <iframe> once the intro film is shared -->
+    <p class="modal-lead">Ten seconds of us in motion. Then come find your rhythm.</p>
+    <div class="modal-stage" id="introStage">
+      <!-- Placeholder poster. When CONFIG.INTRO_VIDEO_SRC / INTRO_VIDEO_YT is set, script.js swaps in the real film here. -->
       <div class="modal-poster" data-todo="intro-video">
         <button class="modal-play" type="button" aria-label="Play intro film">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
         </button>
-        <span class="mono">Intro film — coming soon</span>
+        <span class="mono">Intro film, coming soon</span>
       </div>
     </div>
-    <div class="modal-actions">
-      <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-primary">Enquire / Book a Slot</a>
-      <button class="btn btn-ghost" type="button" data-close>Skip intro</button>
+    <!-- Three-button pyramid: enquire on top, socials below -->
+    <div class="pyramid">
+      <button class="btn btn-light pyramid-top" type="button" data-enquire>Enquire / Book a Slot</button>
+      <div class="pyramid-base">
+        <a class="btn btn-social" href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+          Instagram
+        </a>
+        <a class="btn btn-social" href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/></svg>
+          YouTube
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ENQUIRY MODAL (in-site form, posts to Google Sheets) ============ -->
+<div class="modal" id="enquiryModal" role="dialog" aria-modal="true" aria-labelledby="enquiryTitle" hidden>
+  <div class="modal-backdrop" data-close-enquiry></div>
+  <div class="modal-card enquiry-card" role="document">
+    <button class="modal-close" type="button" data-close-enquiry aria-label="Close enquiry form">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+
+    <div class="enquiry-body" id="enquiryBody">
+      <span class="eyebrow mono enquiry-eyebrow">Book your first session</span>
+      <h2 id="enquiryTitle" class="modal-title display">Let's get you moving.</h2>
+      <p class="modal-lead">Tell us a little about you. It takes 20 seconds, and we'll WhatsApp you within 24 hours. No spam, no pressure, just the next step.</p>
+
+      <ul class="enquiry-proof mono" aria-hidden="true">
+        <li><b>700+</b> dancers trained</li>
+        <li><b>25+</b> weddings</li>
+        <li><b>Small batches</b>, limited slots</li>
+      </ul>
+
+      <form class="enquiry-form" id="enquiryForm" novalidate>
+        <!-- honeypot: humans never see it; bots fill it and get dropped -->
+        <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
+
+        <div class="field">
+          <label for="ef-name">Your name <span class="req">*</span></label>
+          <input id="ef-name" name="name" type="text" autocomplete="name" required placeholder="First name is enough">
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label for="ef-phone">Phone / WhatsApp <span class="req">*</span></label>
+            <input id="ef-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+91">
+          </div>
+          <div class="field">
+            <label for="ef-email">Email <span class="opt">(optional)</span></label>
+            <input id="ef-email" name="email" type="email" autocomplete="email" placeholder="you@email.com">
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field field-sm">
+            <label for="ef-age">Age <span class="opt">(optional)</span></label>
+            <input id="ef-age" name="age" type="number" min="3" max="99" inputmode="numeric" placeholder="e.g. 24">
+          </div>
+          <div class="field">
+            <label for="ef-location">Location <span class="opt">(optional)</span></label>
+            <input id="ef-location" name="location" type="text" autocomplete="address-level2" placeholder="Pune / online / your city">
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="ef-looking">What are you looking for? <span class="req">*</span></label>
+          <select id="ef-looking" name="looking_for" required>
+            <option value="" disabled selected>Pick one</option>
+            <option>Dance Classes</option>
+            <option>Fitness Sessions</option>
+            <option>Online Batches</option>
+            <option>Wedding &amp; Event Choreography</option>
+            <option>Not sure yet, help me choose</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="ef-sessions">How many sessions? <span class="opt">(optional)</span></label>
+          <select id="ef-sessions" name="sessions">
+            <option value="" disabled selected>No idea yet is fine</option>
+            <option>Just trying it out</option>
+            <option>1 to 4 sessions</option>
+            <option>5 to 8 sessions</option>
+            <option>Ongoing / monthly batch</option>
+            <option>A full wedding package</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="ef-message">Anything else? <span class="opt">(optional)</span></label>
+          <textarea id="ef-message" name="message" rows="2" placeholder="Your goal, a date, a song, anything"></textarea>
+        </div>
+
+        <p class="enquiry-error" id="enquiryError" role="alert" hidden></p>
+
+        <button class="btn btn-primary enquiry-submit" type="submit" id="enquirySubmit">
+          <span class="submit-label">Send my enquiry</span>
+        </button>
+        <p class="enquiry-fineprint mono">Free to enquire · We reply within 24 hours · Your details stay with us</p>
+      </form>
+    </div>
+
+    <!-- Success state (revealed after submit) -->
+    <div class="enquiry-success" id="enquirySuccess" hidden>
+      <div class="success-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>
+      </div>
+      <h2 class="display">You're in.</h2>
+      <p>Got it. We'll WhatsApp you within 24 hours to lock your slot. While you wait, come see the crew move:</p>
+      <div class="pyramid-base success-links">
+        <a class="btn btn-social" href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+          Instagram
+        </a>
+        <a class="btn btn-social" href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="currentColor" stroke="none"/></svg>
+          YouTube
+        </a>
+      </div>
+      <button class="btn btn-ghost success-close" type="button" data-close-enquiry>Back to the site</button>
     </div>
   </div>
 </div>
 
 <nav class="nav">
   <a href="#home" class="brand">
-    <img class="brand-mark" src="logo-mark.png" alt="" width="17" height="34">
+    <span class="brand-mark-wrap" id="brandMarkWrap">
+      <img class="brand-mark" id="brandMark" src="logo-mark.png" alt="" width="17" height="34">
+    </span>
     <span class="brand-name display">STREET FLOW</span>
   </a>
   <div class="nav-links mono">
@@ -86,9 +210,9 @@
     <a href="#styles">Styles</a>
     <a href="#about">About</a>
     <a href="#watch">Watch</a>
+    <a href="#reviews">Reviews</a>
     <a href="#contact">Contact</a>
   </div>
-  <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="nav-cta">Enquire</a>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
   </button>
@@ -99,8 +223,8 @@
   <a href="#styles">Styles</a>
   <a href="#about">About</a>
   <a href="#watch">Watch</a>
+  <a href="#reviews">Reviews</a>
   <a href="#contact">Contact</a>
-  <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="nav-cta mono">Enquire</a>
 </div>
 
 <main id="main" tabindex="-1">
@@ -110,11 +234,18 @@
       <div>
         <span class="eyebrow mono"><span class="eyebrow-dot"></span>Pune&nbsp;·&nbsp;Online Sessions Worldwide&nbsp;·&nbsp;Open to Travel</span>
         <h1 class="display">Your one stop<br><span class="accent">dance hub</span><br>for movement &amp; fitness</h1>
-        <p class="hero-sub">Street Flow trains dancers, choreographs weddings and events, and runs fitness sessions built around rhythm — for beginners, couples, and companies who want the real thing.</p>
+        <p class="hero-sub">Join 700+ dancers who started exactly where you are. Learn from founders with 20+ years on the floor, in-studio in Pune or live online, anywhere in the world. No experience needed. No pressure. Just your first session.</p>
         <div class="hero-cta">
-          <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-primary">Enquire / Book a Slot</a>
+          <button class="btn btn-primary" type="button" data-enquire>Book your first session</button>
           <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">Follow @streetflowdance</a>
         </div>
+        <p class="hero-microcopy mono">Takes 20 seconds · No spam, ever · We reply within 24 hours</p>
+        <ul class="hero-stats mono" aria-label="Street Flow by the numbers">
+          <li><b class="display">700+</b> dancers trained</li>
+          <li><b class="display">25+</b> weddings</li>
+          <li><b class="display">50+</b> events</li>
+          <li><b class="display">2024</b> since</li>
+        </ul>
       </div>
       <div class="hero-visual">
         <svg class="flow-figure" viewBox="0 0 300 420" fill="none" aria-hidden="true">
@@ -165,7 +296,7 @@
         <div class="service-card" data-reveal style="--d:100ms">
           <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><path d="M20 30C20 30 8 22 8 14.5C8 9 15 6.5 20 12C25 6.5 32 9 32 14.5C32 22 20 30 20 30Z" stroke="var(--bone)" stroke-width="1.6"/></svg></div>
           <h3>Wedding &amp; Event Choreography</h3>
-          <p>Sangeet entries, baraat sets and stage performances — choreographed and rehearsed from scratch for your day.</p>
+          <p>Sangeet entries, baraat sets and stage performances, choreographed and rehearsed from scratch for your day.</p>
           <div class="service-bar"></div>
         </div>
         <div class="service-card" data-reveal style="--d:200ms">
@@ -177,20 +308,20 @@
         <div class="service-card" data-reveal style="--d:300ms">
           <div class="service-icon" aria-hidden="true"><svg viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="12" stroke="var(--bone)" stroke-width="1.6"/><path d="M8 20h24M20 8c3.5 3.2 3.5 20.8 0 24M20 8c-3.5 3.2-3.5 20.8 0 24" stroke="var(--bone)" stroke-width="1.4"/></svg></div>
           <h3>Online Batches</h3>
-          <p>Live, streamed dance and fitness batches you can join from anywhere in the world — same coaching, straight to your room.</p>
+          <p>Live, streamed dance and fitness batches you can join from anywhere in the world. Same coaching, straight to your room.</p>
           <div class="service-bar"></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ STYLES & FITNESS — interactive tabbed panel ============ -->
+  <!-- ============ STYLES & FITNESS, interactive tabbed panel ============ -->
   <section id="styles" class="styles">
     <div class="wrap">
       <div class="section-head" data-reveal>
         <span class="eyebrow mono">What we teach</span>
         <h2 class="display">Pick a lane. Or take them all.</h2>
-        <p>From street forms to classical, aerobics to Zumba — tap a track to see everything under it, all on one screen.</p>
+        <p>From street forms to classical, aerobics to Zumba. Tap a track to see everything under it, all on one screen.</p>
       </div>
 
       <div class="track-tabs mono" role="tablist" aria-label="What we teach" data-reveal>
@@ -213,7 +344,7 @@
           <li class="chip">Salsa</li><li class="chip">Garba</li><li class="chip">Dandiya</li>
           <li class="chip">Lavani</li><li class="chip">Giddha</li><li class="chip">Ghoomar</li>
           <li class="chip">Bharatanatyam</li><li class="chip">Kathak</li><li class="chip">Semi Classical</li>
-          <li class="chip">Bollywood</li><li class="chip">Lyrical Hip Hop</li>
+          <li class="chip">Bollywood</li><li class="chip">Lyrical Hip Hop</li><li class="chip chip-more">…and many more</li>
         </ul>
       </div>
 
@@ -228,13 +359,13 @@
     </div>
   </section>
 
-  <!-- ============ ABOUT — intro + pinned founders/achievements scrolly ============ -->
+  <!-- ============ ABOUT, intro + pinned founders/achievements scrolly ============ -->
   <section id="about" class="about">
     <div class="wrap">
       <div class="section-head about-head" data-reveal>
         <span class="eyebrow mono">About us</span>
         <h2 class="display">What is Street&nbsp;Flow?</h2>
-        <p>We are a community of passionate dancers dedicated to creating a positive, welcoming space where people of all ages and skill levels can learn, grow, and thrive together. At Street Flow, we believe dance is more than just movement — it's a way to express, connect, and grow.</p>
+        <p>We are a community of passionate dancers dedicated to creating a positive, welcoming space where people of all ages and skill levels can learn, grow, and thrive together. At Street Flow, we believe dance is more than just movement. It's a way to express, connect, and grow.</p>
         <p>Through every class, we aim to inspire confidence, creativity, discipline, and a lifelong love for dance. Whether you're dancing for a performance, fitness, fun, self-expression, or to pursue your passion, we focus on building strong fundamentals while ensuring every class is engaging, energetic, and enjoyable.</p>
       </div>
     </div>
@@ -312,12 +443,44 @@
   <section id="watch">
     <div class="wrap">
       <div class="section-head" data-reveal>
-        <span class="eyebrow mono">On Instagram</span>
-        <h2 class="display">See it live</h2>
-        <p>Reels, wedding films, practice clips and reviews — organized on the profile, updated constantly.</p>
+        <span class="eyebrow mono">See it live</span>
+        <h2 class="display">Watch the flow</h2>
+        <p>Short teasers here, full films on Instagram and YouTube. Reels, wedding sets, practice clips and reviews, updated constantly.</p>
       </div>
       <div class="watch-grid">
-        <!-- watch cards populated by JS (script.js → WATCH). Highlight links are placeholders for now. -->
+        <!-- watch cards populated by JS (script.js -> WATCH). Each tile can hold a short teaser loop or a cover image, and links to the full post. -->
+      </div>
+      <div class="watch-cta" data-reveal>
+        <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">See more on Instagram</a>
+        <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="btn btn-ghost">Watch on YouTube</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ REVIEWS / TESTIMONIALS (placeholder, real quotes to be added) ============ -->
+  <section id="reviews" class="reviews">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">Loved by dancers</span>
+        <h2 class="display">Don't take our word for it.</h2>
+        <p>Real words from real students and couples. We're adding fresh ones as they come in.</p>
+      </div>
+      <div class="reviews-grid" data-todo="testimonials">
+        <figure class="review-card" data-reveal style="--d:0ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>Your testimonial will live here. Send us 3 to 6 real quotes and we'll drop them straight in, in this exact style.</blockquote>
+          <figcaption><span class="review-name display">Student name</span><span class="review-meta mono">Dance Class · Pune</span></figcaption>
+        </figure>
+        <figure class="review-card" data-reveal style="--d:120ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>A second placeholder quote. Wedding couples, batch students, fitness regulars, we'll feature a mix so every visitor sees someone like them.</blockquote>
+          <figcaption><span class="review-name display">Couple name</span><span class="review-meta mono">Wedding Choreography</span></figcaption>
+        </figure>
+        <figure class="review-card" data-reveal style="--d:240ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>A third placeholder quote. A screenshot from Instagram or a Google review works too, we'll format it to match.</blockquote>
+          <figcaption><span class="review-name display">Batch member</span><span class="review-meta mono">Online Batch</span></figcaption>
+        </figure>
       </div>
     </div>
   </section>
@@ -325,34 +488,39 @@
   <section class="cta-section" id="contact">
     <div class="wrap" data-reveal>
       <span class="eyebrow mono" style="border-color:rgba(11,11,12,0.2);color:var(--ash-dark)">Let's move</span>
-      <h2>Ready to join the flow?</h2>
-      <p>Tell us what you're looking for — a class, a wedding set, an online batch, or a fitness session — and we'll get back to you.</p>
+      <h2>The hardest step is the first one. Take it.</h2>
+      <p>Tell us what you're looking for, a class, a wedding set, an online batch, or a fitness session, and we'll WhatsApp you within 24 hours. Small batches, so we can actually coach you.</p>
       <div class="hero-cta">
-        <a href="https://forms.gle/dnPcpc2FCEGoDuvm6" target="_blank" rel="noopener" class="btn btn-dark">Fill the Enquiry Form</a>
+        <button class="btn btn-dark" type="button" data-enquire>Book your first session</button>
         <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">DM on Instagram</a>
       </div>
-      <!-- PLACEHOLDER contact rows — email / phone / WhatsApp to be supplied by the studio -->
-      <ul class="contact-rows mono" data-todo="contact-details">
-        <li><span class="contact-k">Email</span><span class="contact-v">coming soon</span></li>
-        <li><span class="contact-k">Phone / WhatsApp</span><span class="contact-v">coming soon</span></li>
+      <ul class="contact-rows mono">
+        <li><span class="contact-k">Email</span><a class="contact-v" href="mailto:streetflowdance@gmail.com">streetflowdance@gmail.com</a></li>
+        <li><span class="contact-k">Phone</span><a class="contact-v" href="tel:+918571909482">+91 85719 09482</a></li>
+        <li><span class="contact-k">WhatsApp</span><a class="contact-v" href="https://wa.me/918571909482" target="_blank" rel="noopener">Message us on WhatsApp</a></li>
       </ul>
     </div>
   </section>
 
 </main>
 
+<!-- ============ STICKY ENQUIRE (bottom-right) ============ -->
+<button class="sticky-cta" type="button" data-enquire aria-haspopup="dialog" aria-label="Book your first session, open the enquiry form">
+  <svg class="sticky-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 4h16v12H7l-3 3z"/></svg>
+  <span class="sticky-cta-label">Enquire</span>
+</button>
+
 <footer>
   <div class="wrap footer-row">
     <div class="footer-brand">
       <img class="brand-mark" src="logo-mark.png" alt="" width="13" height="26">
-      <span class="fine">Street Flow — Pune. Built for the culture.</span>
+      <span class="fine">Street Flow · Pune. Built for the culture.</span>
     </div>
     <div class="footer-social-row">
       <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
       </a>
-      <!-- PLACEHOLDER: set href to the real YouTube channel URL -->
-      <a href="#" class="footer-social" data-todo="youtube-url" aria-disabled="true" aria-label="YouTube (link coming soon)" title="YouTube — link coming soon">
+      <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="footer-social" aria-label="YouTube">
         <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="var(--bone)" stroke="none"/></svg>
       </a>
     </div>

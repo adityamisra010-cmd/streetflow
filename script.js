@@ -1,93 +1,170 @@
-/* Street Flow — interactions. Plain JS, no dependencies. All motion respects prefers-reduced-motion. */
+/* Street Flow, interactions. Plain JS, no dependencies. All motion respects prefers-reduced-motion. */
 (function () {
   'use strict';
-  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const mqPin = window.matchMedia('(min-width:821px)');
-  const $ = (s, r) => (r || document).querySelector(s);
-  const $$ = (s, r) => Array.prototype.slice.call((r || document).querySelectorAll(s));
 
-  /* ---------- Watch grid (highlight links are placeholders until real reels are added) ---------- */
-  const PROFILE = 'https://www.instagram.com/streetflowdance/';
-  const WATCH = [
-    { label: 'Dance Reels',        angle: 95,  href: PROFILE },
-    { label: 'Wedding',            angle: 140, href: PROFILE },
-    { label: 'Teasers',            angle: 60,  href: PROFILE },
-    { label: 'Practices',          angle: 110, href: PROFILE },
-    { label: 'Reviews',            angle: 80,  href: PROFILE },
-    { label: 'Events',             angle: 150, href: PROFILE },
-    { label: 'Celeb Interactions', angle: 70,  href: PROFILE },
-    { label: 'All Posts',          angle: 120, href: PROFILE }
+  /* =====================================================================
+     CONFIG - the only block you edit to go live. Drop files in the repo
+     root and paste the values here. Everything degrades gracefully when
+     a value is left blank.
+     ===================================================================== */
+  var CONFIG = {
+    // Google Apps Script Web App URL that writes enquiries to your Sheet.
+    // See BACKEND-SETUP.md for the 5-minute setup. Looks like:
+    // https://script.google.com/macros/s/AKfy..../exec
+    SHEET_ENDPOINT: '',
+
+    // Intro film for the welcome pop-up. Use ONE of these:
+    INTRO_VIDEO_SRC: '',   // self-hosted file, e.g. 'intro.mp4'
+    INTRO_VIDEO_YT: '',    // OR a YouTube video id, e.g. 'dQw4w9WgXcQ'
+
+    // Replace the header logo with a looping muted video on arrival.
+    LOGO_VIDEO_SRC: '',    // e.g. 'logo-motion.mp4' (poster falls back to logo-mark.png)
+
+    // Social destinations (used by buttons + success screen).
+    INSTAGRAM_URL: 'https://www.instagram.com/streetflowdance/',
+    YOUTUBE_URL: 'https://youtube.com/@streetflowdance'
+  };
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mqPin = window.matchMedia('(min-width:821px)');
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- Watch grid ----------
+     Each item can carry a short teaser `video` (mp4) OR a `poster` image, and
+     always links to the full post via `href`. With neither, a flame gradient
+     placeholder shows. Add real teasers/links here when ready. */
+  var PROFILE = CONFIG.INSTAGRAM_URL;
+  var WATCH = [
+    { label: 'Dance Reels',        angle: 95,  href: PROFILE, video: '', poster: '' },
+    { label: 'Wedding',            angle: 140, href: PROFILE, video: '', poster: '' },
+    { label: 'Teasers',            angle: 60,  href: PROFILE, video: '', poster: '' },
+    { label: 'Practices',          angle: 110, href: PROFILE, video: '', poster: '' },
+    { label: 'Reviews',            angle: 80,  href: PROFILE, video: '', poster: '' },
+    { label: 'Events',             angle: 150, href: PROFILE, video: '', poster: '' },
+    { label: 'Celeb Interactions', angle: 70,  href: PROFILE, video: '', poster: '' },
+    { label: 'All Posts',          angle: 120, href: PROFILE, video: '', poster: '' }
   ];
-  const grid = $('.watch-grid');
+  var grid = $('.watch-grid');
   if (grid) {
-    WATCH.forEach((item, i) => {
-      const a = document.createElement('a');
-      a.href = item.href;          // TODO: point each at its specific Instagram highlight/reel
+    WATCH.forEach(function (item, i) {
+      var a = document.createElement('a');
+      a.href = item.href;          // TODO: point each at its specific reel/highlight
       a.target = '_blank';
       a.rel = 'noopener';
       a.className = 'watch-card';
       a.setAttribute('data-reveal', '');
       a.style.setProperty('--d', (i % 4) * 90 + 'ms');
-      a.innerHTML =
-        '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>' +
+
+      var media = '';
+      if (item.video) {
+        a.classList.add('has-media');
+        media = '<video class="teaser" src="' + item.video + '" muted loop playsinline preload="metadata"' +
+                (item.poster ? ' poster="' + item.poster + '"' : '') + '></video><span class="scrim"></span>';
+      } else if (item.poster) {
+        a.classList.add('has-media');
+        media = '<img class="cover" src="' + item.poster + '" alt="" loading="lazy"><span class="scrim"></span>';
+      } else {
+        media = '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>';
+      }
+
+      a.innerHTML = media +
         '<span class="label">' + item.label + '</span>' +
-        '<span class="go">View on Instagram' +
+        '<span class="go">View post' +
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';
       grid.appendChild(a);
+
+      // teaser playback: hover on desktop, in-view on touch; paused otherwise
+      var vid = a.querySelector('video.teaser');
+      if (vid && !prefersReduced) {
+        a.addEventListener('mouseenter', function () { vid.play().catch(function () {}); });
+        a.addEventListener('mouseleave', function () { vid.pause(); });
+      }
     });
+
+    // autoplay teasers while on screen (touch devices), respecting reduced motion
+    if (!prefersReduced) {
+      var vids = $$('video.teaser', grid);
+      if (vids.length) {
+        var vo = new IntersectionObserver(function (entries) {
+          entries.forEach(function (e) {
+            if (e.isIntersecting) { e.target.play().catch(function () {}); }
+            else { e.target.pause(); }
+          });
+        }, { threshold: 0.6 });
+        vids.forEach(function (v) { vo.observe(v); });
+      }
+    }
   }
 
   /* ---------- Scroll reveal ---------- */
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
   }, { threshold: 0.15 });
-  $$('[data-reveal]').forEach((el) => io.observe(el));
+  $$('[data-reveal]').forEach(function (el) { io.observe(el); });
+
+  /* ---------- Logo video swap (optional) ---------- */
+  if (CONFIG.LOGO_VIDEO_SRC) {
+    var wrap = $('#brandMarkWrap');
+    if (wrap) {
+      var lv = document.createElement('video');
+      lv.className = 'brand-mark';
+      lv.muted = true; lv.loop = true; lv.autoplay = true;
+      lv.setAttribute('muted', ''); lv.setAttribute('playsinline', ''); lv.setAttribute('autoplay', '');
+      lv.setAttribute('aria-hidden', 'true');
+      lv.poster = 'logo-mark.png';
+      lv.src = CONFIG.LOGO_VIDEO_SRC;
+      wrap.innerHTML = '';
+      wrap.appendChild(lv);
+      lv.play().catch(function () {});
+    }
+  }
 
   /* ---------- Mobile menu ---------- */
-  const toggle = $('#navToggle');
-  const menu = $('#mobileMenu');
-  const menuBg = [$('main'), $('footer')].filter(Boolean); // content behind the full-screen overlay
+  var toggle = $('#navToggle');
+  var menu = $('#mobileMenu');
+  var menuBg = [$('main'), $('footer')].filter(Boolean);
   function setMenu(open) {
     menu.classList.toggle('open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     menu.setAttribute('aria-hidden', open ? 'false' : 'true');
     menu.inert = !open;
-    menuBg.forEach((el) => { el.inert = open; }); // keep focus out of the hidden page
+    menuBg.forEach(function (el) { el.inert = open; });
     document.body.style.overflow = open ? 'hidden' : '';
   }
   if (toggle && menu) {
     setMenu(false);
-    toggle.addEventListener('click', () => setMenu(!menu.classList.contains('open')));
-    $$('a', menu).forEach((a) => a.addEventListener('click', () => setMenu(false)));
-    document.addEventListener('keydown', (e) => {
+    toggle.addEventListener('click', function () { setMenu(!menu.classList.contains('open')); });
+    $$('a', menu).forEach(function (a) { a.addEventListener('click', function () { setMenu(false); }); });
+    document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape' && menu.classList.contains('open')) { setMenu(false); toggle.focus(); }
     });
   }
 
   /* ---------- Styles / Fitness tabs ---------- */
-  const tablist = $('.track-tabs');
-  const tabs = $$('.track-tab');
-  const underline = $('.track-underline');
+  var tablist = $('.track-tabs');
+  var tabs = $$('.track-tab');
+  var underline = $('.track-underline');
   function positionUnderline(tab) {
     if (!underline || !tab) return;
     underline.style.width = tab.offsetWidth + 'px';
     underline.style.transform = 'translateX(' + tab.offsetLeft + 'px)';
   }
   function staggerChips(panel) {
-    const chips = $$('.chip', panel);
-    chips.forEach((c) => c.classList.remove('in'));
-    requestAnimationFrame(() => {
-      chips.forEach((c, i) => setTimeout(() => c.classList.add('in'), prefersReduced ? 0 : i * 22));
+    var chips = $$('.chip', panel);
+    chips.forEach(function (c) { c.classList.remove('in'); });
+    requestAnimationFrame(function () {
+      chips.forEach(function (c, i) { setTimeout(function () { c.classList.add('in'); }, prefersReduced ? 0 : i * 22); });
     });
   }
   function activateTab(tab) {
-    tabs.forEach((t) => {
-      const on = t === tab;
+    tabs.forEach(function (t) {
+      var on = t === tab;
       t.classList.toggle('is-active', on);
       t.setAttribute('aria-selected', on ? 'true' : 'false');
       t.tabIndex = on ? 0 : -1;
-      const panel = document.getElementById(t.getAttribute('aria-controls'));
+      var panel = document.getElementById(t.getAttribute('aria-controls'));
       if (panel) {
         panel.classList.toggle('is-active', on);
         panel.hidden = !on;
@@ -97,24 +174,23 @@
     positionUnderline(tab);
   }
   if (tabs.length) {
-    tabs.forEach((tab) => tab.addEventListener('click', () => activateTab(tab)));
-    tablist.addEventListener('keydown', (e) => {
+    tabs.forEach(function (tab) { tab.addEventListener('click', function () { activateTab(tab); }); });
+    tablist.addEventListener('keydown', function (e) {
       if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      const i = tabs.indexOf(document.activeElement);
+      var i = tabs.indexOf(document.activeElement);
       if (i < 0) return;
       e.preventDefault();
-      const ni = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
+      var ni = e.key === 'ArrowRight' ? (i + 1) % tabs.length : (i - 1 + tabs.length) % tabs.length;
       tabs[ni].focus();
       activateTab(tabs[ni]);
     });
-    // position the active pill once layout + webfonts are ready; stagger chips on first view
     positionUnderline($('.track-tab.is-active') || tabs[0]);
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => positionUnderline($('.track-tab.is-active') || tabs[0]));
-    window.addEventListener('resize', () => positionUnderline($('.track-tab.is-active') || tabs[0]));
-    const stylesSec = $('#styles');
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { positionUnderline($('.track-tab.is-active') || tabs[0]); });
+    window.addEventListener('resize', function () { positionUnderline($('.track-tab.is-active') || tabs[0]); });
+    var stylesSec = $('#styles');
     if (stylesSec) {
-      const so = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
+      var so = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
           if (e.isIntersecting) { staggerChips($('.track-panel.is-active')); positionUnderline($('.track-tab.is-active')); so.disconnect(); }
         });
       }, { threshold: 0.2 });
@@ -123,37 +199,37 @@
   }
 
   /* ---------- Achievements count-up ---------- */
-  let countsDone = false;
+  var countsDone = false;
   function runCounts() {
     if (countsDone) return; countsDone = true;
-    $$('.achieve-stat .num').forEach((el) => {
-      const target = +el.dataset.count, suffix = el.dataset.suffix || '';
+    $$('.achieve-stat .num').forEach(function (el) {
+      var target = +el.dataset.count, suffix = el.dataset.suffix || '';
       if (prefersReduced) { el.textContent = target + suffix; return; }
-      const dur = 1200, t0 = performance.now();
+      var dur = 1200, t0 = performance.now();
       (function step(now) {
-        const p = Math.min((now - t0) / dur, 1);
-        const eased = 1 - Math.pow(1 - p, 3);
+        var p = Math.min((now - t0) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3);
         el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
         if (p < 1) requestAnimationFrame(step); else el.textContent = target + suffix;
       })(performance.now());
     });
   }
 
-  /* ---------- About scrollytelling (pinned on desktop, swipe carousel on mobile) ---------- */
-  const scrolly = $('#scrolly');
+  /* ---------- About scrollytelling ---------- */
+  var scrolly = $('#scrolly');
   if (scrolly) {
-    const spanels = $$('.spanel', scrolly);
-    const sdots = $$('.scrolly-dot', scrolly);
-    const panelsWrap = $('.scrolly-panels', scrolly);
-    const n = spanels.length;
-    let current = -1;
+    var spanels = $$('.spanel', scrolly);
+    var sdots = $$('.scrolly-dot', scrolly);
+    var panelsWrap = $('.scrolly-panels', scrolly);
+    var n = spanels.length;
+    var current = -1;
     function setPanel(i) {
       i = Math.max(0, Math.min(n - 1, i));
       if (i === current) return;
       current = i;
-      spanels.forEach((p, idx) => p.classList.toggle('is-active', idx === i));
-      sdots.forEach((d, idx) => {
-        const on = idx === i;
+      spanels.forEach(function (p, idx) { p.classList.toggle('is-active', idx === i); });
+      sdots.forEach(function (d, idx) {
+        var on = idx === i;
         d.classList.toggle('is-active', on);
         if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
       });
@@ -161,62 +237,55 @@
     }
     setPanel(0);
 
-    // desktop: scroll position within the tall section drives the active panel
-    let ticking = false;
+    var ticking = false;
     function onScroll() {
       if (!mqPin.matches || prefersReduced) return;
-      const rect = scrolly.getBoundingClientRect();
-      const total = scrolly.offsetHeight - window.innerHeight;
-      const scrolled = Math.min(Math.max(-rect.top, 0), total);
-      const progress = total > 0 ? scrolled / total : 0;
+      var rect = scrolly.getBoundingClientRect();
+      var total = scrolly.offsetHeight - window.innerHeight;
+      var scrolled = Math.min(Math.max(-rect.top, 0), total);
+      var progress = total > 0 ? scrolled / total : 0;
       setPanel(Math.min(n - 1, Math.floor(progress * n)));
     }
-    window.addEventListener('scroll', () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(() => { onScroll(); ticking = false; }); }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(function () { onScroll(); ticking = false; }); }
     }, { passive: true });
 
-    // mobile: horizontal snap carousel updates the dots
-    let cTick = false;
+    var cTick = false;
     function onCarousel() {
       if (mqPin.matches) return;
-      const wr = panelsWrap.getBoundingClientRect();
-      const center = wr.left + wr.width / 2;
-      let best = 0, bestD = Infinity;
-      spanels.forEach((p, idx) => {
-        const r = p.getBoundingClientRect();
-        const d = Math.abs((r.left + r.width / 2) - center);
+      var wr = panelsWrap.getBoundingClientRect();
+      var center = wr.left + wr.width / 2;
+      var best = 0, bestD = Infinity;
+      spanels.forEach(function (p, idx) {
+        var r = p.getBoundingClientRect();
+        var d = Math.abs((r.left + r.width / 2) - center);
         if (d < bestD) { bestD = d; best = idx; }
       });
-      setPanel(best); // keep `current`, is-active and aria-current in sync in mobile mode too
+      setPanel(best);
     }
     if (panelsWrap) {
-      panelsWrap.addEventListener('scroll', () => {
-        if (!cTick) { cTick = true; requestAnimationFrame(() => { onCarousel(); cTick = false; }); }
+      panelsWrap.addEventListener('scroll', function () {
+        if (!cTick) { cTick = true; requestAnimationFrame(function () { onCarousel(); cTick = false; }); }
       }, { passive: true });
     }
-    // re-sync when crossing the desktop/mobile breakpoint
-    mqPin.addEventListener('change', () => { current = -1; if (mqPin.matches) onScroll(); else onCarousel(); });
+    mqPin.addEventListener('change', function () { current = -1; if (mqPin.matches) onScroll(); else onCarousel(); });
 
-    // dots are clickable in both modes
-    sdots.forEach((d) => d.addEventListener('click', () => {
-      const i = +d.dataset.i;
+    sdots.forEach(function (d) { d.addEventListener('click', function () {
+      var i = +d.dataset.i;
       if (mqPin.matches && !prefersReduced) {
-        const top = scrolly.getBoundingClientRect().top + window.scrollY;
-        const total = scrolly.offsetHeight - window.innerHeight;
+        var top = scrolly.getBoundingClientRect().top + window.scrollY;
+        var total = scrolly.offsetHeight - window.innerHeight;
         window.scrollTo({ top: top + ((i + 0.5) / n) * total, behavior: 'smooth' });
       } else if (panelsWrap && spanels[i]) {
         spanels[i].scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
         setPanel(i);
       }
-    }));
+    }); });
 
-    // reduced motion or mobile: all panels are laid out, so fire counts on real intersection.
-    // (On desktop the panels are stacked in the pinned stage, so we rely on setPanel(last) instead
-    //  to avoid counting up while the achievements panel is still faded out.)
-    const achieve = spanels[n - 1];
+    var achieve = spanels[n - 1];
     if (achieve) {
-      const ao = new IntersectionObserver((entries) => {
-        entries.forEach((e) => {
+      var ao = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
           if (e.isIntersecting && (!mqPin.matches || prefersReduced)) { runCounts(); ao.disconnect(); }
         });
       }, { threshold: 0.35 });
@@ -225,60 +294,220 @@
     onScroll();
   }
 
-  /* ---------- Preloader + intro video modal ---------- */
-  const preloader = $('#preloader');
-  const modal = $('#introModal');
-  let lastFocus = null;
-  const bgEls = Array.prototype.slice.call(document.body.children)
-    .filter((el) => el !== modal && el !== preloader);
+  /* =====================================================================
+     MODAL SYSTEM (intro + enquiry). Background is made inert so focus
+     stays trapped inside the open dialog; Escape and backdrop close it.
+     ===================================================================== */
+  var openModals = 0;
+  var preloaderDone = false;
+  var introDismissed = false;
+  var sticky = $('.sticky-cta');
 
-  function setBgInert(on) { bgEls.forEach((el) => { el.inert = on; }); }
-  function openModal() {
-    if (!modal) return;
-    lastFocus = document.activeElement;
-    modal.hidden = false;
-    document.body.style.overflow = 'hidden';
-    setBgInert(true);
-    const close = $('.modal-close', modal);
-    if (close) close.focus();
+  function bgFor(modal) {
+    return Array.prototype.slice.call(document.body.children).filter(function (el) { return el !== modal; });
   }
-  function closeModal() {
-    if (!modal) return;
-    modal.hidden = true;
-    document.body.style.overflow = '';
-    setBgInert(false);
-    // on auto-open, lastFocus is <body>; return focus to a real control instead of dropping it
-    const back = (lastFocus && lastFocus.focus && lastFocus !== document.body) ? lastFocus : $('.brand');
-    if (back && back.focus) back.focus();
+  function updateSticky() {
+    if (!sticky) return;
+    var show = preloaderDone && openModals === 0 && (window.scrollY > 260 || introDismissed);
+    sticky.classList.toggle('show', show);
   }
-  if (modal) {
-    $$('[data-close]', modal).forEach((el) => el.addEventListener('click', closeModal));
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) closeModal(); });
-    // Play is a placeholder until the real film is supplied.
-    const play = $('.modal-play', modal);
-    if (play) play.addEventListener('click', () => { /* TODO: start intro video when provided */ });
+
+  function makeModal(modal, closeSel, focusSel) {
+    if (!modal) return null;
+    var lastFocus = null;
+    var api = {
+      isOpen: function () { return !modal.hidden; },
+      open: function (returnEl) {
+        if (!modal.hidden) return;
+        lastFocus = returnEl || document.activeElement;
+        modal.hidden = false;
+        document.body.style.overflow = 'hidden';
+        bgFor(modal).forEach(function (el) { el.inert = true; });
+        openModals++;
+        updateSticky();
+        var f = (focusSel && modal.querySelector(focusSel)) || modal.querySelector('button, [href], input, select, textarea');
+        if (f && f.focus) f.focus();
+      },
+      close: function () {
+        if (modal.hidden) return;
+        modal.hidden = true;
+        openModals = Math.max(0, openModals - 1);
+        if (openModals === 0) document.body.style.overflow = '';
+        bgFor(modal).forEach(function (el) { el.inert = false; });
+        updateSticky();
+        var back = (lastFocus && lastFocus.focus && lastFocus !== document.body && lastFocus.offsetParent !== null) ? lastFocus : (sticky || $('.brand'));
+        if (back && back.focus) back.focus();
+      }
+    };
+    $$(closeSel, modal).forEach(function (el) { el.addEventListener('click', api.close); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !modal.hidden) api.close(); });
+    return api;
   }
-  // placeholder links (e.g. the YouTube "coming soon" icon) must not jump to top
-  $$('a[aria-disabled="true"]').forEach((a) => a.addEventListener('click', (e) => e.preventDefault()));
+
+  /* ---------- Intro modal (welcome film + pyramid) ---------- */
+  var introEl = $('#introModal');
+  var intro = makeModal(introEl, '[data-close]', '.modal-close');
+
+  function playIntro() {
+    var stage = $('#introStage');
+    if (!stage) return;
+    if (CONFIG.INTRO_VIDEO_SRC) {
+      stage.innerHTML = '<video class="intro-video" src="' + CONFIG.INTRO_VIDEO_SRC + '" controls autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>';
+      var v = stage.querySelector('video'); if (v) v.play().catch(function () {});
+    } else if (CONFIG.INTRO_VIDEO_YT) {
+      stage.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + CONFIG.INTRO_VIDEO_YT + '?autoplay=1&rel=0" title="Street Flow intro film" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0"></iframe>';
+    }
+    // no film configured yet: leave the "coming soon" placeholder untouched
+  }
+  if (introEl) {
+    var introPlay = $('.modal-play', introEl);
+    if (introPlay) introPlay.addEventListener('click', playIntro);
+    // if a film is configured, relabel the placeholder so it invites a play
+    if (CONFIG.INTRO_VIDEO_SRC || CONFIG.INTRO_VIDEO_YT) {
+      var lbl = $('.modal-poster .mono', introEl);
+      if (lbl) lbl.textContent = 'Play the intro';
+    }
+    // closing the intro (any which way) marks it dismissed so the sticky CTA can appear
+    $$('[data-close]', introEl).forEach(function (el) { el.addEventListener('click', function () { introDismissed = true; updateSticky(); }); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && introEl && !introEl.hidden) { introDismissed = true; } });
+  }
+
+  /* ---------- Enquiry modal + Google Sheets submission ---------- */
+  var enquiryEl = $('#enquiryModal');
+  var enquiry = makeModal(enquiryEl, '[data-close-enquiry]', '#ef-name');
+  var form = $('#enquiryForm');
+  var enquiryBody = $('#enquiryBody');
+  var enquirySuccess = $('#enquirySuccess');
+  var enquiryError = $('#enquiryError');
+  var submitBtn = $('#enquirySubmit');
+
+  function resetEnquiryView() {
+    if (enquiryBody) enquiryBody.hidden = false;
+    if (enquirySuccess) enquirySuccess.hidden = true;
+    if (enquiryError) { enquiryError.hidden = true; enquiryError.textContent = ''; }
+    $$('.field-error', form).forEach(function (f) { f.classList.remove('field-error'); });
+  }
+
+  function openEnquiry(trigger) {
+    // if launched from inside the intro pop-up, close that first
+    if (intro && intro.isOpen()) { introDismissed = true; intro.close(); }
+    resetEnquiryView();
+    if (enquiry) enquiry.open(trigger && trigger.offsetParent !== null ? trigger : null);
+  }
+  $$('[data-enquire]').forEach(function (btn) {
+    btn.addEventListener('click', function () { openEnquiry(btn); });
+  });
+
+  function showEnquiryError(msg) {
+    if (!enquiryError) return;
+    enquiryError.textContent = msg;
+    enquiryError.hidden = false;
+  }
+
+  function validate() {
+    if (!form) return false;
+    $$('.field-error', form).forEach(function (f) { f.classList.remove('field-error'); });
+    if (enquiryError) { enquiryError.hidden = true; enquiryError.textContent = ''; }
+    var required = [['name', 'your name'], ['phone', 'a phone or WhatsApp number'], ['looking_for', 'what you are looking for']];
+    var firstBad = null, msg = '';
+    required.forEach(function (pair) {
+      var el = form.elements[pair[0]];
+      if (!el) return;
+      if (!String(el.value).trim()) {
+        var fld = el.closest('.field'); if (fld) fld.classList.add('field-error');
+        if (!firstBad) { firstBad = el; msg = 'Please add ' + pair[1] + '.'; }
+      }
+    });
+    var email = form.elements['email'];
+    if (!firstBad && email && email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+      var ef = email.closest('.field'); if (ef) ef.classList.add('field-error');
+      firstBad = email; msg = 'That email looks off. Check it, or leave it blank.';
+    }
+    if (firstBad) { showEnquiryError(msg); firstBad.focus(); return false; }
+    return true;
+  }
+
+  function setSubmitting(on) {
+    if (!submitBtn) return;
+    submitBtn.disabled = on;
+    var lbl = submitBtn.querySelector('.submit-label');
+    if (lbl) lbl.textContent = on ? 'Sending…' : 'Send my enquiry';
+  }
+
+  function showSuccess() {
+    if (enquiryBody) enquiryBody.hidden = true;
+    if (enquirySuccess) {
+      enquirySuccess.hidden = false;
+      var back = enquirySuccess.querySelector('.success-close');
+      if (back && back.focus) back.focus();
+    }
+    setSubmitting(false);
+    if (form) form.reset();
+  }
+
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      // honeypot: bots fill the hidden field; silently accept and drop
+      var hp = form.elements['company'];
+      if (hp && hp.value) { showSuccess(); return; }
+      if (!validate()) return;
+
+      setSubmitting(true);
+      var data = new FormData(form);
+      data.append('page', location.href);
+      data.append('submitted_at', new Date().toISOString());
+
+      var done = function () { showSuccess(); };
+      var fail = function () {
+        setSubmitting(false);
+        showEnquiryError('Could not send just now. Please WhatsApp us at +91 85719 09482 or email streetflowdance@gmail.com and we will sort it.');
+      };
+
+      if (CONFIG.SHEET_ENDPOINT) {
+        fetch(CONFIG.SHEET_ENDPOINT, { method: 'POST', mode: 'no-cors', body: data }).then(done, fail);
+      } else {
+        // No backend wired yet: preview the success flow, warn the developer.
+        if (window.console) console.warn('Street Flow: CONFIG.SHEET_ENDPOINT is empty, so this enquiry was not delivered. See BACKEND-SETUP.md.');
+        setTimeout(done, 400);
+      }
+    });
+  }
+
+  /* ---------- Sticky CTA visibility ---------- */
+  if (sticky) {
+    window.addEventListener('scroll', function () { updateSticky(); }, { passive: true });
+    window.addEventListener('resize', updateSticky);
+  }
+
+  /* ---------- Preloader + auto-intro ---------- */
+  var preloader = $('#preloader');
   function maybeShowIntro() {
-    if (!modal) return;
+    if (!introEl || !intro) return;
     try {
-      if (sessionStorage.getItem('sf_intro_seen')) return;
+      if (sessionStorage.getItem('sf_intro_seen')) { introDismissed = true; updateSticky(); return; }
       sessionStorage.setItem('sf_intro_seen', '1');
     } catch (e) { /* private mode: just show it */ }
-    openModal();
+    intro.open();
   }
 
   if (preloader) {
-    let hidden = false;
-    function hidePreloader() {
+    var hidden = false;
+    var hidePreloader = function () {
       if (hidden) return; hidden = true;
       preloader.classList.add('done');
-      setTimeout(() => { preloader.style.display = 'none'; maybeShowIntro(); }, prefersReduced ? 0 : 620);
-    }
-    window.addEventListener('load', () => setTimeout(hidePreloader, prefersReduced ? 120 : 900));
+      setTimeout(function () {
+        preloader.style.display = 'none';
+        preloaderDone = true;
+        updateSticky();
+        maybeShowIntro();
+      }, prefersReduced ? 0 : 620);
+    };
+    window.addEventListener('load', function () { setTimeout(hidePreloader, prefersReduced ? 120 : 900); });
     setTimeout(hidePreloader, 3500); // safety net if 'load' is slow (e.g. blocked webfonts)
   } else {
+    preloaderDone = true;
+    updateSticky();
     maybeShowIntro();
   }
 })();
