@@ -16,6 +16,9 @@
 
 *,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
 
+/* the hidden attribute must win over any display rule we set (e.g. .modal-poster{display:flex}) */
+[hidden]{ display:none !important; }
+
 html{ scroll-behavior:smooth; }
 
 body{
@@ -323,7 +326,22 @@ footer .fine{ font-size:13px; color:var(--ash); }
 .modal-close svg{ width:18px; height:18px; }
 .modal-close:hover{ border-color:var(--flame-2); }
 .modal-title{ font-size:22px; font-weight:600; margin-bottom:18px; padding-right:44px; }
-.modal-stage{ aspect-ratio:16/9; border-radius:14px; overflow:hidden; border:1px solid var(--line); }
+.modal-stage{ position:relative; aspect-ratio:16/9; border-radius:14px; overflow:hidden; border:1px solid var(--line); }
+.modal-stage iframe{ width:100%; height:100%; border:0; display:block; }
+.intro-video{ width:100%; height:100%; object-fit:cover; display:block; background:#000; }
+/* Instagram embeds are portrait and carry their own white card */
+.modal-stage.is-portrait{ aspect-ratio:9/16; width:min(340px,100%); max-height:62vh; margin:0 auto; background:#fff; }
+.sound-hint{
+  position:absolute; top:12px; right:12px;
+  display:inline-flex; align-items:center; gap:8px;
+  padding:9px 14px; border-radius:100px;
+  border:1px solid rgba(237,231,216,.35); background:rgba(11,11,12,.66);
+  color:var(--bone); font-size:10px;
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  transition:border-color .3s var(--ease), background .3s var(--ease);
+}
+.sound-hint svg{ width:14px; height:14px; }
+.sound-hint:hover{ border-color:var(--flame-2); background:rgba(11,11,12,.82); }
 .modal-poster{ width:100%; height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; background:radial-gradient(600px 300px at 50% 40%, rgba(244,169,59,.12), transparent 70%), var(--ink); color:var(--ash); }
 .modal-play{ width:70px; height:70px; border-radius:50%; border:none; background:var(--flow-gradient); color:var(--ink); display:flex; align-items:center; justify-content:center; transition:transform .3s var(--ease); }
 .modal-play svg{ width:26px; height:26px; margin-left:3px; }

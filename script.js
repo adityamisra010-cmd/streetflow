@@ -13,9 +13,13 @@
     // https://script.google.com/macros/s/AKfy..../exec
     SHEET_ENDPOINT: '',
 
-    // Intro film for the welcome pop-up. Use ONE of these:
-    INTRO_VIDEO_SRC: '',   // self-hosted file, e.g. 'intro.mp4'
-    INTRO_VIDEO_YT: '',    // OR a YouTube video id, e.g. 'dQw4w9WgXcQ'
+    // Intro film for the welcome pop-up. Use ONE of these (checked in this order).
+    // Best experience first: a real file autoplays muted and fills the frame.
+    INTRO_VIDEO_SRC: '',   // BEST: self-hosted file, e.g. 'intro.mp4'
+    INTRO_POSTER: '',      //   optional still frame for the moment before it starts
+    INTRO_VIDEO_YT: '',    // GOOD: a YouTube video id, e.g. 'dQw4w9WgXcQ' (unlisted is fine)
+    INTRO_VIDEO_IG: '',    // OK:   an Instagram post/reel link, zero uploading, but see the notes
+                           //       in CONTENT-TODO.md: it cannot autoplay and shows Instagram's card.
 
     // Replace the header logo with a looping muted video on arrival.
     LOGO_VIDEO_SRC: '',    // e.g. 'logo-motion.mp4' (poster falls back to logo-mark.png)
@@ -383,24 +387,103 @@
 
   /* ---------- Intro modal (welcome film + pyramid) ---------- */
   var introEl = $('#introModal');
-  var intro = makeModal(introEl, '[data-close]', '.modal-close');
+  var introStage = $('#introStage');
+  var introPoster = introStage ? introStage.querySelector('.modal-poster') : null;
 
-  function playIntro() {
-    var stage = $('#introStage');
-    if (!stage) return;
-    if (CONFIG.INTRO_VIDEO_SRC) {
-      stage.innerHTML = '<video class="intro-video" src="' + CONFIG.INTRO_VIDEO_SRC + '" controls autoplay playsinline style="width:100%;height:100%;object-fit:cover"></video>';
-      var v = stage.querySelector('video'); if (v) v.play().catch(function () {});
-    } else if (CONFIG.INTRO_VIDEO_YT) {
-      stage.innerHTML = '<iframe src="https://www.youtube-nocookie.com/embed/' + CONFIG.INTRO_VIDEO_YT + '?autoplay=1&rel=0" title="Street Flow intro film" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen style="width:100%;height:100%;border:0"></iframe>';
-    }
-    // no film configured yet: leave the "coming soon" placeholder untouched
+  // Tear the film down when the pop-up closes, so nothing keeps playing behind the page.
+  var intro = makeModal(introEl, '[data-close]', '.modal-close', clearIntroMedia);
+
+  function clearIntroMedia() {
+    if (!introStage) return;
+    $$('video, iframe', introStage).forEach(function (el) {
+      if (el.tagName === 'VIDEO') { try { el.pause(); } catch (e) {} }
+      el.removeAttribute('src');
+      el.remove();
+    });
+    var hint = introStage.querySelector('.sound-hint');
+    if (hint) hint.remove();
+    introStage.classList.remove('is-portrait');
+    if (introPoster) introPoster.hidden = false;
   }
+
+  // Build the film inside the stage. Returns true if something was mounted.
+  function mountIntroMedia() {
+    if (!introStage || introStage.querySelector('video, iframe')) return true;
+    var mounted = false;
+
+    if (CONFIG.INTRO_VIDEO_SRC) {
+      var v = document.createElement('video');
+      v.className = 'intro-video';
+      v.src = CONFIG.INTRO_VIDEO_SRC;
+      if (CONFIG.INTRO_POSTER) v.poster = CONFIG.INTRO_POSTER;
+      v.controls = true;
+      v.setAttribute('playsinline', '');
+      if (!prefersReduced) {
+        // muted autoplay is the only kind browsers allow without a click
+        v.muted = true; v.setAttribute('muted', '');
+        v.loop = true;
+        v.setAttribute('autoplay', '');
+      }
+      introStage.appendChild(v);
+      if (!prefersReduced) {
+        v.play().catch(function () {});
+        introStage.appendChild(makeSoundHint(v));
+      }
+      mounted = true;
+
+    } else if (CONFIG.INTRO_VIDEO_YT) {
+      var yt = document.createElement('iframe');
+      yt.src = 'https://www.youtube-nocookie.com/embed/' + CONFIG.INTRO_VIDEO_YT +
+               '?rel=0&playsinline=1&modestbranding=1' + (prefersReduced ? '' : '&autoplay=1&mute=1');
+      yt.title = 'Street Flow intro film';
+      yt.setAttribute('frameborder', '0');
+      yt.setAttribute('allowfullscreen', '');
+      yt.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture; fullscreen');
+      introStage.appendChild(yt);
+      mounted = true;
+
+    } else if (CONFIG.INTRO_VIDEO_IG) {
+      var embed = igEmbedUrl(CONFIG.INTRO_VIDEO_IG);
+      if (embed) {
+        // Instagram embeds are portrait and cannot autoplay; reshape the stage to suit
+        introStage.classList.add('is-portrait');
+        var ig = document.createElement('iframe');
+        ig.src = embed;
+        ig.title = 'Street Flow intro film on Instagram';
+        ig.setAttribute('scrolling', 'no');
+        ig.setAttribute('frameborder', '0');
+        ig.setAttribute('allowfullscreen', '');
+        ig.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share');
+        introStage.appendChild(ig);
+        mounted = true;
+      }
+    }
+
+    if (mounted && introPoster) introPoster.hidden = true;
+    return mounted;
+  }
+
+  // "Tap for sound" control, since the film has to start muted to autoplay at all
+  function makeSoundHint(video) {
+    var hint = document.createElement('button');
+    hint.type = 'button';
+    hint.className = 'sound-hint mono';
+    hint.innerHTML =
+      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">' +
+      '<path d="M11 5L6 9H3v6h3l5 4V5z"/><path d="M15.5 8.5a5 5 0 010 7"/></svg>Tap for sound';
+    hint.addEventListener('click', function () {
+      video.muted = false;
+      video.play().catch(function () {});
+      hint.remove();
+    });
+    return hint;
+  }
+
   if (introEl) {
+    // the placeholder play button is only reachable when no film is configured yet
     var introPlay = $('.modal-play', introEl);
-    if (introPlay) introPlay.addEventListener('click', playIntro);
-    // if a film is configured, relabel the placeholder so it invites a play
-    if (CONFIG.INTRO_VIDEO_SRC || CONFIG.INTRO_VIDEO_YT) {
+    if (introPlay) introPlay.addEventListener('click', mountIntroMedia);
+    if (CONFIG.INTRO_VIDEO_SRC || CONFIG.INTRO_VIDEO_YT || CONFIG.INTRO_VIDEO_IG) {
       var lbl = $('.modal-poster .mono', introEl);
       if (lbl) lbl.textContent = 'Play the intro';
     }
@@ -554,6 +637,7 @@
       if (sessionStorage.getItem('sf_intro_seen')) { introDismissed = true; updateSticky(); return; }
       sessionStorage.setItem('sf_intro_seen', '1');
     } catch (e) { /* private mode: just show it */ }
+    mountIntroMedia();   // film is ready (and already rolling) the moment the pop-up appears
     intro.open();
   }
 

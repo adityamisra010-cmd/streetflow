@@ -30,11 +30,23 @@ The whole site is wired to a single config block. Fill these in and the features
 
 ## 2. Intro film for the welcome pop-up - action needed
 
-- **What it is:** A dismissible pop-up opens once per session with a play button and a 3-button pyramid
-  (Enquire on top, Instagram + YouTube below).
-- **What to send me / do:** an MP4 to self-host (set `CONFIG.INTRO_VIDEO_SRC = 'intro.mp4'`) **or** a YouTube
-  id (set `CONFIG.INTRO_VIDEO_YT = 'xxxx'`). The play button then plays it. No file? It shows a tasteful
-  "coming soon" placeholder.
+A dismissible pop-up opens once per session, with the film on top and the 3-button pyramid below
+(Enquire, then Instagram + YouTube). Pick **one** of these three in `script.js` -> `CONFIG`:
+
+| Option | Set this | What visitors get |
+|---|---|---|
+| **Best: a real file** | `INTRO_VIDEO_SRC: 'intro.mp4'` | Starts **playing by itself** the instant the pop-up opens, muted and looping, filling the frame edge to edge in your dark theme. A "Tap for sound" button turns audio on. |
+| **Good: YouTube** | `INTRO_VIDEO_YT: 'VIDEO_ID'` | Also **autoplays** (muted). Free hosting, nothing on your server. An unlisted video works fine. |
+| **OK: Instagram** | `INTRO_VIDEO_IG: 'https://instagram.com/reel/XXXX/'` | Zero uploading, but it **cannot autoplay** (Instagram blocks it), the visitor must press play, and it shows Instagram's white card in portrait rather than your branding. |
+
+**My recommendation:** for the *watch grid*, Instagram links are perfect. For *this* pop-up, they are the
+weakest of the three, because this is the first three seconds of your brand and Instagram embeds cannot
+autoplay or be styled. A single `intro.mp4` uploaded once gives a dramatically stronger first impression.
+If you would rather not host a file, put the intro on your YouTube channel as unlisted and use
+`INTRO_VIDEO_YT`, which still autoplays.
+
+Optional: `INTRO_POSTER: 'intro-still.jpg'` sets the still frame shown for the split second before playback.
+No film configured at all? The pop-up shows a tasteful "coming soon" placeholder, so nothing looks broken.
 
 ## 3. Logo-as-video on arrival - optional
 
@@ -42,6 +54,9 @@ The whole site is wired to a single config block. Fill these in and the features
 - **What to send me / do:** a small looping MP4 (transparent or on-brand background), then set
   `CONFIG.LOGO_VIDEO_SRC = 'logo-motion.mp4'`. Poster falls back to the current `logo-mark.png`, so it never
   looks broken.
+- **Note:** this one has to be a real file. An Instagram link cannot work here, because an embed brings
+  Instagram's whole card (avatar, username, like count) with it, which cannot be shrunk into a logo. Same
+  applies to the loading screen.
 
 ## 4. Watch / "See it live" - just paste your Instagram links
 
