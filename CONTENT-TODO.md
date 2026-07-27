@@ -102,19 +102,7 @@ teaser on the tile face. With neither, the on-brand flame gradient shows, which 
 - **What to send me:** 3-6 real quotes with a first name + context (e.g. "Dance Class · Pune", "Wedding
   Choreography"). Screenshots of Instagram/Google reviews work too; I'll format them to match.
 
-## 7. "Since 2004" in the footer - please confirm
-
-The footer now reads **STREET FLOW / SINCE 2004**, exactly as requested. Flagging one conflict so you can
-decide, because it is visible to every visitor:
-
-- The **Proof in numbers** section says **"Since 2024"**, and the hero's fourth stat also reads **2024**.
-- The founder bios say **8+ and 7+ years of teaching**, which would sit oddly with a studio founded in 2004.
-
-If 2004 is the founding year, I should probably reword the other two to something like "Since 2024" meaning
-"tracking results since 2024", or change them to match. If 2004 was a typo for 2024, it is a one-character
-fix in `index.html` (`.footer-since`). Tell me which and I will align all three.
-
-## 8. Production domain - before go-live
+## 7. Production domain - before go-live
 
 - **What it is:** Canonical / Open Graph / Twitter / `robots.txt` / `sitemap.xml` still use the placeholder
   `https://streetflow.vercel.app`.
