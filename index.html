@@ -44,6 +44,9 @@
 
 <a class="skip-link" href="#main">Skip to content</a>
 
+<!-- Ambient cursor flow (desktop pointers only; script.js skips touch + reduced motion) -->
+<canvas class="cursor-fx" id="cursorFx" aria-hidden="true"></canvas>
+
 <!-- ============ PRELOADER (animated flame logomark) ============ -->
 <div class="preloader" id="preloader">
   <div class="preloader-inner">
@@ -221,7 +224,7 @@
 <nav class="nav">
   <a href="#home" class="brand">
     <span class="brand-mark-wrap" id="brandMarkWrap">
-      <img class="brand-mark" id="brandMark" src="logo-mark.png" alt="" width="17" height="34">
+      <img class="brand-mark" id="brandMark" src="logo-mark.png" alt="" width="291" height="596">
     </span>
     <span class="brand-name display">STREET FLOW</span>
   </a>
@@ -251,21 +254,20 @@
 
   <section class="hero" id="home">
     <div class="wrap hero-grid">
-      <div>
-        <span class="eyebrow mono"><span class="eyebrow-dot"></span>Pune&nbsp;·&nbsp;Online Sessions Worldwide&nbsp;·&nbsp;Open to Travel</span>
+      <div class="hero-copy">
+        <span class="eyebrow mono"><span class="eyebrow-dot"></span>Pune, India&nbsp;·&nbsp;Online Sessions Worldwide&nbsp;·&nbsp;Open to Travel</span>
         <h1 class="display">Your one stop<br><span class="accent">dance hub</span><br>for movement &amp; fitness</h1>
+        <ul class="hero-stats" id="heroStats" aria-label="Street Flow by the numbers">
+          <li style="--i:0"><b class="display hero-num" data-count="700" data-suffix="+">0</b><span class="mono">dancers trained</span></li>
+          <li style="--i:1"><b class="display hero-num" data-count="25" data-suffix="+">0</b><span class="mono">weddings</span></li>
+          <li style="--i:2"><b class="display hero-num" data-count="50" data-suffix="+">0</b><span class="mono">events</span></li>
+          <li style="--i:3"><b class="display hero-num" data-count="2024">0</b><span class="mono">since</span></li>
+        </ul>
         <p class="hero-sub">Join 700+ dancers who started exactly where you are. Learn from founders with 20+ years on the floor, in-studio in Pune or live online, anywhere in the world. No experience needed. No pressure. Just your first session.</p>
         <div class="hero-cta">
           <button class="btn btn-primary" type="button" data-enquire>Book your first session</button>
           <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">Follow @streetflowdance</a>
         </div>
-        <p class="hero-microcopy mono">Takes 20 seconds · No spam, ever · We reply within 24 hours</p>
-        <ul class="hero-stats mono" aria-label="Street Flow by the numbers">
-          <li><b class="display">700+</b> dancers trained</li>
-          <li><b class="display">25+</b> weddings</li>
-          <li><b class="display">50+</b> events</li>
-          <li><b class="display">2024</b> since</li>
-        </ul>
       </div>
       <div class="hero-visual">
         <svg class="flow-figure" viewBox="0 0 300 420" fill="none" aria-hidden="true">
@@ -390,72 +392,54 @@
       </div>
     </div>
 
-    <div class="scrolly" id="scrolly" data-panels="3">
-      <div class="scrolly-stage">
-        <div class="wrap scrolly-inner">
-          <div class="scrolly-aside">
-            <span class="eyebrow mono">Meet the founders</span>
-            <div class="scrolly-dots" role="group" aria-label="Founders and achievements">
-              <button class="scrolly-dot is-active" type="button" data-i="0" aria-current="true" aria-label="Show Anuj Chopra"></button>
-              <button class="scrolly-dot" type="button" data-i="1" aria-label="Show Anuja VW"></button>
-              <button class="scrolly-dot" type="button" data-i="2" aria-label="Show achievements since 2024"></button>
+    <!-- Founders, side by side -->
+    <div class="wrap">
+      <span class="eyebrow mono founders-eyebrow" data-reveal>Meet the founders</span>
+      <div class="founders-grid">
+        <article class="founder-card" data-reveal style="--d:0ms">
+          <div class="founder-photo" data-todo="photo-anuj" aria-hidden="true"><span class="founder-initials display">AC</span></div>
+          <div class="founder-body">
+            <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
+            <h3 class="founder-name display">Anuj Chopra</h3>
+            <div class="founder-stats">
+              <span><b class="display">20+</b> yrs dancing</span>
+              <span><b class="display">8+</b> yrs teaching</span>
+              <span><b class="display">12+</b> styles</span>
             </div>
+            <p>With over 20 years of dance experience and 8+ years of teaching, Anuj Chopra is trained in 12+ dance styles, from Indian folk to street dance forms. Having trained under renowned dance professionals and performed in numerous competitions, he brings versatility and creativity to every project. As Co-Founder of Street Flow, his vision is to build a vibrant dance community where everyone feels inspired to learn, grow, and express themselves freely.</p>
           </div>
+        </article>
 
-          <div class="scrolly-panels">
-            <!-- Founder 1 -->
-            <article class="spanel is-active" data-panel="0">
-              <div class="founder">
-                <div class="founder-photo" data-todo="photo-anuj" aria-hidden="true"><span class="founder-initials display">AC</span></div>
-                <div class="founder-body">
-                  <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
-                  <h3 class="founder-name display">Anuj Chopra</h3>
-                  <div class="founder-stats">
-                    <span><b class="display">20+</b> yrs dancing</span>
-                    <span><b class="display">8+</b> yrs teaching</span>
-                    <span><b class="display">12+</b> styles</span>
-                  </div>
-                  <p>With over 20 years of dance experience and 8+ years of teaching, Anuj Chopra is trained in 12+ dance styles, from Indian folk to street dance forms. Having trained under renowned dance professionals and performed in numerous competitions, he brings versatility and creativity to every project. As Co-Founder of Street Flow, his vision is to build a vibrant dance community where everyone feels inspired to learn, grow, and express themselves freely.</p>
-                </div>
-              </div>
-            </article>
-
-            <!-- Founder 2 -->
-            <article class="spanel" data-panel="1">
-              <div class="founder">
-                <div class="founder-photo" data-todo="photo-anuja" aria-hidden="true"><span class="founder-initials display">AV</span></div>
-                <div class="founder-body">
-                  <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
-                  <h3 class="founder-name display">Anuja VW</h3>
-                  <div class="founder-stats">
-                    <span><b class="display">21+</b> yrs dancing</span>
-                    <span><b class="display">7+</b> yrs teaching</span>
-                    <span><b class="display">3</b> disciplines</span>
-                  </div>
-                  <p>Dancing since the age of three, Anuja brings over 21 years of dance experience and 7+ years of teaching expertise. Trained in Bharatanatyam, Western, and folk dance styles, she combines technical excellence with expressive artistry in every performance and choreography. As Co-Founder of Street Flow, her vision is to inspire confidence, nurture creativity, and help every dancer discover the joy of movement.</p>
-                </div>
-              </div>
-            </article>
-
-            <!-- Achievements -->
-            <article class="spanel" data-panel="2">
-              <div class="achieve">
-                <span class="achieve-eyebrow mono">Since 2024</span>
-                <h3 class="display">Proof, in numbers.</h3>
-                <div class="achieve-grid">
-                  <div class="achieve-stat"><b class="num display" data-count="700" data-suffix="+">0</b><span>Students trained</span></div>
-                  <div class="achieve-stat"><b class="num display" data-count="25" data-suffix="+">0</b><span>Wedding choreographies</span></div>
-                  <div class="achieve-stat"><b class="num display" data-count="50" data-suffix="+">0</b><span>Events &amp; performances</span></div>
-                  <div class="achieve-stat"><b class="num display" data-count="75" data-suffix="+">0</b><span>Batches &amp; workshops</span></div>
-                  <div class="achieve-stat achieve-stat-wide"><b class="num display" data-count="1500" data-suffix="+">0</b><span>Dance classes conducted</span></div>
-                </div>
-                <div class="tag-row">
-                  <span class="tag">Weddings</span><span class="tag">Corporate Events</span><span class="tag">College Fests</span><span class="tag">Dance Battles</span><span class="tag">Celebrity Sessions</span>
-                </div>
-              </div>
-            </article>
+        <article class="founder-card" data-reveal style="--d:140ms">
+          <div class="founder-photo" data-todo="photo-anuja" aria-hidden="true"><span class="founder-initials display">AV</span></div>
+          <div class="founder-body">
+            <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
+            <h3 class="founder-name display">Anuja VW</h3>
+            <div class="founder-stats">
+              <span><b class="display">21+</b> yrs dancing</span>
+              <span><b class="display">7+</b> yrs teaching</span>
+              <span><b class="display">3</b> disciplines</span>
+            </div>
+            <p>Dancing since the age of three, Anuja brings over 21 years of dance experience and 7+ years of teaching expertise. Trained in Bharatanatyam, Western, and folk dance styles, she combines technical excellence with expressive artistry in every performance and choreography. As Co-Founder of Street Flow, her vision is to inspire confidence, nurture creativity, and help every dancer discover the joy of movement.</p>
           </div>
-        </div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ PROOF IN NUMBERS (its own section) ============ -->
+  <section id="proof" class="proof">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">Since 2024</span>
+        <h2 class="display">Proof, in numbers.</h2>
+      </div>
+      <div class="achieve-grid" data-reveal>
+        <div class="achieve-stat"><b class="num display" data-count="700" data-suffix="+">0</b><span>Students trained</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="25" data-suffix="+">0</b><span>Wedding choreographies</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="50" data-suffix="+">0</b><span>Events &amp; performances</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="75" data-suffix="+">0</b><span>Batches &amp; workshops</span></div>
+        <div class="achieve-stat achieve-stat-wide"><b class="num display" data-count="1500" data-suffix="+">0</b><span>Dance classes conducted</span></div>
       </div>
     </div>
   </section>
@@ -471,8 +455,18 @@
         <!-- watch cards populated by JS (script.js -> WATCH). Each tile can hold a short teaser loop or a cover image, and links to the full post. -->
       </div>
       <div class="watch-cta" data-reveal>
-        <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">See more on Instagram</a>
-        <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="btn btn-ghost">Watch on YouTube</a>
+        <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-ig">
+          <span class="btn-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          See more on Instagram
+        </a>
+        <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-yt">
+          <span class="btn-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5.5" width="20" height="13" rx="4" fill="currentColor"/><path d="M10 9.4l5.2 2.6L10 14.6z" fill="var(--ink)"/></svg>
+          </span>
+          Watch on YouTube
+        </a>
       </div>
     </div>
   </section>
@@ -514,11 +508,35 @@
         <button class="btn btn-dark" type="button" data-enquire>Book your first session</button>
         <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">DM on Instagram</a>
       </div>
-      <ul class="contact-rows mono">
-        <li><span class="contact-k">Email</span><a class="contact-v" href="mailto:streetflowdance@gmail.com">streetflowdance@gmail.com</a></li>
-        <li><span class="contact-k">Phone</span><a class="contact-v" href="tel:+918571909482">+91 85719 09482</a></li>
-        <li><span class="contact-k">WhatsApp</span><a class="contact-v" href="https://wa.me/918571909482" target="_blank" rel="noopener">Message us on WhatsApp</a></li>
-      </ul>
+      <div class="contact-cards">
+        <a class="contact-card" href="mailto:streetflowdance@gmail.com" data-reveal style="--d:0ms">
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="2.5" y="4.5" width="19" height="15" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
+          </span>
+          <span class="contact-meta">
+            <span class="contact-k mono">Email</span>
+            <span class="contact-v">streetflowdance@gmail.com</span>
+          </span>
+        </a>
+        <a class="contact-card" href="tel:+918571909482" data-reveal style="--d:110ms">
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M6.5 3.5h3l1.5 4-2 1.5a12 12 0 006 6l1.5-2 4 1.5v3a2 2 0 01-2.2 2A17 17 0 014.5 5.7 2 2 0 016.5 3.5z"/></svg>
+          </span>
+          <span class="contact-meta">
+            <span class="contact-k mono">Phone</span>
+            <span class="contact-v">+91 85719 09482</span>
+          </span>
+        </a>
+        <a class="contact-card" href="https://wa.me/918571909482" target="_blank" rel="noopener" data-reveal style="--d:220ms">
+          <span class="contact-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 3a9 9 0 00-7.7 13.6L3.2 21l4.5-1.1A9 9 0 1012 3z"/><path d="M9.2 8.4c.3-.1.6 0 .8.4l.7 1.3c.1.3.1.5-.1.7l-.5.6c-.1.2-.2.4 0 .7a7 7 0 002.8 2.6c.3.2.5.1.7-.1l.6-.6c.2-.2.4-.2.7-.1l1.3.7c.4.2.5.5.4.8-.2.7-1 1.3-1.8 1.4-1.7.2-4-1-5.5-2.9s-2-4-1.5-5.4c.2-.7.7-1.2 1.4-1.1z" fill="currentColor" stroke="none"/></svg>
+          </span>
+          <span class="contact-meta">
+            <span class="contact-k mono">WhatsApp</span>
+            <span class="contact-v">Message us</span>
+          </span>
+        </a>
+      </div>
     </div>
   </section>
 
@@ -531,19 +549,24 @@
 </button>
 
 <footer>
-  <div class="wrap footer-row">
+  <div class="wrap footer-inner">
     <div class="footer-brand">
-      <img class="brand-mark" src="logo-mark.png" alt="" width="13" height="26">
-      <span class="fine">Street Flow · Pune. Built for the culture.</span>
+      <img class="footer-mark" src="logo-mark.png" alt="" width="291" height="596">
+      <span class="footer-wordmark display">STREET FLOW</span>
+      <span class="footer-since mono">Since 2004</span>
     </div>
+
     <div class="footer-social-row">
-      <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="footer-social" aria-label="Instagram">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
+      <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="footer-social" aria-label="Street Flow on Instagram">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
       </a>
-      <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="footer-social" aria-label="YouTube">
-        <svg viewBox="0 0 24 24" fill="none" stroke="var(--bone)" stroke-width="1.7" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="3.5"/><path d="M10 9.2l5 2.8-5 2.8z" fill="var(--bone)" stroke="none"/></svg>
+      <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="footer-social" aria-label="Street Flow on YouTube">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="2" y="5.5" width="20" height="13" rx="4" fill="currentColor"/><path d="M10 9.4l5.2 2.6L10 14.6z" fill="var(--ink)"/></svg>
       </a>
     </div>
+
+    <p class="footer-tag fine">Your one stop dance hub for movement &amp; fitness. Pune, India, and online worldwide.</p>
+    <p class="footer-legal mono">© <span id="footerYear">2026</span> Street Flow · Built for the culture</p>
   </div>
 </footer>
 

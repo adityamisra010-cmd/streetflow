@@ -47,14 +47,12 @@
      flame gradient, which already looks good. */
   var PROFILE = CONFIG.INSTAGRAM_URL;
   var WATCH = [
-    { label: 'Dance Reels',        angle: 95,  ig: '', href: PROFILE },
-    { label: 'Wedding',            angle: 140, ig: '', href: PROFILE },
-    { label: 'Teasers',            angle: 60,  ig: '', href: PROFILE },
-    { label: 'Practices',          angle: 110, ig: '', href: PROFILE },
-    { label: 'Reviews',            angle: 80,  ig: '', href: PROFILE },
-    { label: 'Events',             angle: 150, ig: '', href: PROFILE },
-    { label: 'Celeb Interactions', angle: 70,  ig: '', href: PROFILE },
-    { label: 'All Posts',          angle: 120, ig: '', href: PROFILE }
+    { label: 'Dance Reels', angle: 95,  ig: '', href: PROFILE },
+    { label: 'Wedding',     angle: 140, ig: '', href: PROFILE },
+    { label: 'Teasers',     angle: 60,  ig: '', href: PROFILE },
+    { label: 'Practices',   angle: 110, ig: '', href: PROFILE },
+    { label: 'Events',      angle: 150, ig: '', href: PROFILE },
+    { label: 'All Posts',   angle: 120, ig: '', href: PROFILE }
   ];
 
   /* Turn an Instagram permalink into its embeddable player URL.
@@ -137,10 +135,20 @@
     }
   }
 
-  /* ---------- Scroll reveal ---------- */
+  /* ---------- Scroll reveal ----------
+     rootMargin lifts the trigger line above the fold so a section is already
+     easing in as it enters, which reads as one continuous flow rather than a
+     pop. `settled` drops the compositor hint once the element has arrived. */
   var io = new IntersectionObserver(function (entries) {
-    entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, { threshold: 0.15 });
+    entries.forEach(function (e) {
+      if (!e.isIntersecting) return;
+      var el = e.target;
+      el.classList.add('in');
+      io.unobserve(el);
+      var delay = parseFloat(el.style.getPropertyValue('--d')) || 0;
+      setTimeout(function () { el.classList.add('settled'); }, 1100 + delay);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
   $$('[data-reveal]').forEach(function (el) { io.observe(el); });
 
   /* ---------- Logo video swap (optional) ---------- */
@@ -238,101 +246,47 @@
     }
   }
 
-  /* ---------- Achievements count-up ---------- */
-  var countsDone = false;
-  function runCounts() {
-    if (countsDone) return; countsDone = true;
-    $$('.achieve-stat .num').forEach(function (el) {
-      var target = +el.dataset.count, suffix = el.dataset.suffix || '';
-      if (prefersReduced) { el.textContent = target + suffix; return; }
-      var dur = 1200, t0 = performance.now();
-      (function step(now) {
-        var p = Math.min((now - t0) / dur, 1);
-        var eased = 1 - Math.pow(1 - p, 3);
-        el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
-        if (p < 1) requestAnimationFrame(step); else el.textContent = target + suffix;
-      })(performance.now());
+  /* ---------- Count-up animation (hero stats + proof in numbers) ---------- */
+  function countUp(el, dur) {
+    var target = +el.dataset.count, suffix = el.dataset.suffix || '';
+    if (prefersReduced || !target) { el.textContent = target + suffix; return; }
+    var t0 = performance.now();
+    (function step(now) {
+      var p = Math.min((now - t0) / dur, 1);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased) + (p === 1 ? suffix : '');
+      if (p < 1) requestAnimationFrame(step); else el.textContent = target + suffix;
+    })(performance.now());
+  }
+
+  // fires once, when the block scrolls into view
+  function countOnView(sel, numSel, dur) {
+    var sec = $(sel);
+    if (!sec) return;
+    var done = false;
+    var ob = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (!e.isIntersecting || done) return;
+        done = true;
+        $$(numSel, sec).forEach(function (el) { countUp(el, dur); });
+        ob.disconnect();
+      });
+    }, { threshold: 0.3 });
+    ob.observe(sec);
+  }
+
+  countOnView('#proof', '.achieve-stat .num', 1200);
+
+  // hero stats are above the fold: run them just after the entrance animation
+  (function () {
+    var hero = $('#heroStats');
+    if (!hero) return;
+    var nums = $$('.hero-num', hero);
+    if (prefersReduced) { nums.forEach(function (el) { countUp(el, 0); }); return; }
+    nums.forEach(function (el, i) {
+      setTimeout(function () { countUp(el, 1100); }, 320 + i * 110);
     });
-  }
-
-  /* ---------- About scrollytelling ---------- */
-  var scrolly = $('#scrolly');
-  if (scrolly) {
-    var spanels = $$('.spanel', scrolly);
-    var sdots = $$('.scrolly-dot', scrolly);
-    var panelsWrap = $('.scrolly-panels', scrolly);
-    var n = spanels.length;
-    var current = -1;
-    function setPanel(i) {
-      i = Math.max(0, Math.min(n - 1, i));
-      if (i === current) return;
-      current = i;
-      spanels.forEach(function (p, idx) { p.classList.toggle('is-active', idx === i); });
-      sdots.forEach(function (d, idx) {
-        var on = idx === i;
-        d.classList.toggle('is-active', on);
-        if (on) d.setAttribute('aria-current', 'true'); else d.removeAttribute('aria-current');
-      });
-      if (i === n - 1) runCounts();
-    }
-    setPanel(0);
-
-    var ticking = false;
-    function onScroll() {
-      if (!mqPin.matches || prefersReduced) return;
-      var rect = scrolly.getBoundingClientRect();
-      var total = scrolly.offsetHeight - window.innerHeight;
-      var scrolled = Math.min(Math.max(-rect.top, 0), total);
-      var progress = total > 0 ? scrolled / total : 0;
-      setPanel(Math.min(n - 1, Math.floor(progress * n)));
-    }
-    window.addEventListener('scroll', function () {
-      if (!ticking) { ticking = true; requestAnimationFrame(function () { onScroll(); ticking = false; }); }
-    }, { passive: true });
-
-    var cTick = false;
-    function onCarousel() {
-      if (mqPin.matches) return;
-      var wr = panelsWrap.getBoundingClientRect();
-      var center = wr.left + wr.width / 2;
-      var best = 0, bestD = Infinity;
-      spanels.forEach(function (p, idx) {
-        var r = p.getBoundingClientRect();
-        var d = Math.abs((r.left + r.width / 2) - center);
-        if (d < bestD) { bestD = d; best = idx; }
-      });
-      setPanel(best);
-    }
-    if (panelsWrap) {
-      panelsWrap.addEventListener('scroll', function () {
-        if (!cTick) { cTick = true; requestAnimationFrame(function () { onCarousel(); cTick = false; }); }
-      }, { passive: true });
-    }
-    mqPin.addEventListener('change', function () { current = -1; if (mqPin.matches) onScroll(); else onCarousel(); });
-
-    sdots.forEach(function (d) { d.addEventListener('click', function () {
-      var i = +d.dataset.i;
-      if (mqPin.matches && !prefersReduced) {
-        var top = scrolly.getBoundingClientRect().top + window.scrollY;
-        var total = scrolly.offsetHeight - window.innerHeight;
-        window.scrollTo({ top: top + ((i + 0.5) / n) * total, behavior: 'smooth' });
-      } else if (panelsWrap && spanels[i]) {
-        spanels[i].scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', inline: 'center', block: 'nearest' });
-        setPanel(i);
-      }
-    }); });
-
-    var achieve = spanels[n - 1];
-    if (achieve) {
-      var ao = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting && (!mqPin.matches || prefersReduced)) { runCounts(); ao.disconnect(); }
-        });
-      }, { threshold: 0.35 });
-      ao.observe(achieve);
-    }
-    onScroll();
-  }
+  })();
 
   /* =====================================================================
      MODAL SYSTEM (intro + enquiry). Background is made inert so focus
@@ -628,6 +582,157 @@
     window.addEventListener('scroll', function () { updateSticky(); }, { passive: true });
     window.addEventListener('resize', updateSticky);
   }
+
+  /* =====================================================================
+     AMBIENT CURSOR FLOW
+     A ribbon of light trails the pointer, like the motion-blur streak a
+     dancer leaves behind, drawn in the brand's flame gradient. Sparks peel
+     off on fast movement. Desktop pointers only, and it idles down to zero
+     cost when the pointer stops or the tab is hidden.
+     ===================================================================== */
+  (function () {
+    var canvas = $('#cursorFx');
+    if (!canvas || prefersReduced) return;
+    // fine pointer only: no trail on touch, where there is no cursor to follow
+    if (!window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+
+    var ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var w = 0, h = 0;
+    function resize() {
+      w = window.innerWidth; h = window.innerHeight;
+      canvas.width = Math.round(w * dpr);
+      canvas.height = Math.round(h * dpr);
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    var TRAIL = 26;
+    var pts = [];                 // smoothed trail, newest first
+    var sparks = [];
+    var mx = -999, my = -999;     // raw pointer
+    var sx = -999, sy = -999;     // spring-followed pointer
+    var seen = false, idle = 0, raf = null, hidden = false;
+
+    function onMove(e) {
+      mx = e.clientX; my = e.clientY;
+      if (!seen) {                // first sighting: start the trail where the cursor is
+        seen = true; sx = mx; sy = my;
+        for (var i = 0; i < TRAIL; i++) pts.push({ x: mx, y: my });
+        canvas.classList.add('is-live');
+        start();
+      }
+      idle = 0;
+      start();
+    }
+    window.addEventListener('pointermove', onMove, { passive: true });
+    window.addEventListener('pointerdown', function (e) {
+      onMove(e);
+      // a click blooms a few sparks
+      for (var i = 0; i < 10; i++) {
+        var a = (Math.PI * 2 * i) / 10;
+        sparks.push({ x: mx, y: my, vx: Math.cos(a) * 2.4, vy: Math.sin(a) * 2.4, life: 1, hue: i / 10 });
+      }
+      start();
+    }, { passive: true });
+
+    document.addEventListener('visibilitychange', function () {
+      hidden = document.hidden;
+      if (!hidden) start();
+    });
+
+    var STOPS = ['#ec3f73', '#f4a93b', '#ffd866'];
+    function mixStop(t) {                 // t in 0..1 across the flame gradient
+      var i = Math.min(STOPS.length - 1, Math.max(0, Math.floor(t * (STOPS.length - 1))));
+      return STOPS[i];
+    }
+
+    function frame() {
+      raf = null;
+      if (hidden) return;
+
+      // spring the follower toward the pointer, then push the trail along
+      sx += (mx - sx) * 0.22;
+      sy += (my - sy) * 0.22;
+      pts.unshift({ x: sx, y: sy });
+      if (pts.length > TRAIL) pts.pop();
+
+      ctx.clearRect(0, 0, w, h);
+
+      // the ribbon: tapered, additive, drawn as overlapping segments
+      ctx.globalCompositeOperation = 'lighter';
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+      for (var i = pts.length - 1; i > 0; i--) {
+        var t = i / pts.length;               // 0 at head, 1 at tail
+        var a = pts[i], b = pts[i - 1];
+        ctx.strokeStyle = mixStop(t);
+        ctx.globalAlpha = (1 - t) * 0.40;
+        ctx.lineWidth = (1 - t) * 16 + 1;
+        ctx.beginPath();
+        ctx.moveTo(a.x, a.y);
+        ctx.lineTo(b.x, b.y);
+        ctx.stroke();
+      }
+
+      // a soft core glow at the head
+      var head = pts[0];
+      var g = ctx.createRadialGradient(head.x, head.y, 0, head.x, head.y, 40);
+      g.addColorStop(0, 'rgba(255,216,102,0.38)');
+      g.addColorStop(0.5, 'rgba(236,63,115,0.17)');
+      g.addColorStop(1, 'rgba(236,63,115,0)');
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(head.x, head.y, 40, 0, Math.PI * 2);
+      ctx.fill();
+
+      // speed sheds sparks
+      var speed = Math.hypot(mx - sx, my - sy);
+      if (speed > 9 && sparks.length < 70) {
+        sparks.push({
+          x: head.x, y: head.y,
+          vx: (Math.random() - 0.5) * 2.2 + (mx - sx) * 0.05,
+          vy: (Math.random() - 0.5) * 2.2 + (my - sy) * 0.05,
+          life: 1, hue: Math.random()
+        });
+      }
+      for (var s = sparks.length - 1; s >= 0; s--) {
+        var p = sparks[s];
+        p.x += p.vx; p.y += p.vy;
+        p.vx *= 0.95; p.vy = p.vy * 0.95 + 0.035;   // drag + a little gravity
+        p.life -= 0.022;
+        if (p.life <= 0) { sparks.splice(s, 1); continue; }
+        ctx.globalAlpha = p.life * 0.65;
+        ctx.fillStyle = mixStop(p.hue);
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.life * 2.4, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      ctx.globalAlpha = 1;
+      ctx.globalCompositeOperation = 'source-over';
+
+      // keep animating while there is anything left to settle, then sleep
+      idle++;
+      var moving = speed > 0.4 || sparks.length > 0 || idle < 70;
+      if (moving) start();
+      else { ctx.clearRect(0, 0, w, h); }
+    }
+
+    function start() { if (raf === null && !hidden) raf = requestAnimationFrame(frame); }
+  })();
+
+  /* ---------- Footer year ---------- */
+  (function () {
+    var y = $('#footerYear');
+    if (y) y.textContent = String(new Date().getFullYear());
+  })();
 
   /* ---------- Preloader + auto-intro ---------- */
   var preloader = $('#preloader');

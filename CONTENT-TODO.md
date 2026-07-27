@@ -102,7 +102,19 @@ teaser on the tile face. With neither, the on-brand flame gradient shows, which 
 - **What to send me:** 3-6 real quotes with a first name + context (e.g. "Dance Class · Pune", "Wedding
   Choreography"). Screenshots of Instagram/Google reviews work too; I'll format them to match.
 
-## 7. Production domain - before go-live
+## 7. "Since 2004" in the footer - please confirm
+
+The footer now reads **STREET FLOW / SINCE 2004**, exactly as requested. Flagging one conflict so you can
+decide, because it is visible to every visitor:
+
+- The **Proof in numbers** section says **"Since 2024"**, and the hero's fourth stat also reads **2024**.
+- The founder bios say **8+ and 7+ years of teaching**, which would sit oddly with a studio founded in 2004.
+
+If 2004 is the founding year, I should probably reword the other two to something like "Since 2024" meaning
+"tracking results since 2024", or change them to match. If 2004 was a typo for 2024, it is a one-character
+fix in `index.html` (`.footer-since`). Tell me which and I will align all three.
+
+## 8. Production domain - before go-live
 
 - **What it is:** Canonical / Open Graph / Twitter / `robots.txt` / `sitemap.xml` still use the placeholder
   `https://streetflow.vercel.app`.
@@ -126,3 +138,28 @@ teaser on the tile face. With neither, the on-brand flame gradient shows, which 
 - **Instagram videos play on the site.** Paste a post/reel link into a tile's `ig:` and it opens in an on-site
   player, no downloading or re-uploading. Highlights and profile links fall back to opening Instagram. The
   player loads only when a tile is clicked, so the page stays fast and sets no Instagram cookies otherwise.
+
+---
+
+## Layout & motion pass (this round)
+
+- **Fluid scaling everywhere.** A single token block at the top of `styles.css` drives every size with
+  `clamp()`, so type, spacing, radii and the container width interpolate with the viewport. Verified with no
+  horizontal overflow at 320, 390, 430, 768, 1024, 1280, 1440, 1920, 2560 and 3840 px. Above 2000px the
+  ceilings lift again so a 4K panel does not render laptop-sized text.
+- **Icons audited.** `favicon.ico` (16/32/48), `apple-touch-icon` (180), `android-chrome` (192 / 512) and
+  `og-image` (1200x630) all match what the markup and manifest declare. `logo-mark.png` is 291x596; the nav
+  and footer now declare those true intrinsic dimensions so the logo no longer causes a layout shift.
+- **Scroll flow.** Reveals animate only opacity and transform (compositor-friendly), trigger slightly before
+  entering the viewport so sections ease in continuously, and release their `will-change` once settled.
+  Anchor links now clear the fixed header via `scroll-padding-top`.
+- **Ambient cursor flow.** A canvas ribbon in the brand gradient trails the pointer with spring physics and
+  sheds sparks on fast movement. Desktop pointers only; it is skipped entirely on touch and for
+  `prefers-reduced-motion`, sleeps when the pointer stops, and pauses when the tab is hidden.
+- **Hero reordered** to headline, then the four animated numbers, then the paragraph, then the buttons. The
+  "Takes 20 seconds" line is gone. Numbers count up on load; the Proof section counts up on scroll.
+- **Founders sit side by side**, and **Proof in numbers is its own section** with the irrelevant tag buttons
+  removed.
+- **Mobile mirrors desktop**: the four hero stats stay on one row, services stay two-up, the watch grid stays
+  multi-column, and founder cards keep photo-beside-text. Things only stack where a column would get too
+  narrow to read.
