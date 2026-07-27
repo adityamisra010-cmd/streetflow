@@ -31,25 +31,45 @@
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
 
   /* ---------- Watch grid ----------
-     Each item can carry a short teaser `video` (mp4) OR a `poster` image, and
-     always links to the full post via `href`. With neither, a flame gradient
-     placeholder shows. Add real teasers/links here when ready. */
+     PASTE YOUR INSTAGRAM LINKS INTO `ig` BELOW. Nothing to download or re-upload.
+
+       - A POST or REEL link (instagram.com/p/... or instagram.com/reel/...)
+         opens and PLAYS INSIDE this website, in a pop-up player.
+       - A HIGHLIGHT or profile link (instagram.com/stories/highlights/...) simply
+         opens Instagram in a new tab. Instagram does not allow those to be embedded.
+
+     Optional extras per tile: `video` (a short self-hosted mp4 teaser that loops on
+     the tile itself) and `poster` (a cover image). With neither, the tile shows the
+     flame gradient, which already looks good. */
   var PROFILE = CONFIG.INSTAGRAM_URL;
   var WATCH = [
-    { label: 'Dance Reels',        angle: 95,  href: PROFILE, video: '', poster: '' },
-    { label: 'Wedding',            angle: 140, href: PROFILE, video: '', poster: '' },
-    { label: 'Teasers',            angle: 60,  href: PROFILE, video: '', poster: '' },
-    { label: 'Practices',          angle: 110, href: PROFILE, video: '', poster: '' },
-    { label: 'Reviews',            angle: 80,  href: PROFILE, video: '', poster: '' },
-    { label: 'Events',             angle: 150, href: PROFILE, video: '', poster: '' },
-    { label: 'Celeb Interactions', angle: 70,  href: PROFILE, video: '', poster: '' },
-    { label: 'All Posts',          angle: 120, href: PROFILE, video: '', poster: '' }
+    { label: 'Dance Reels',        angle: 95,  ig: '', href: PROFILE },
+    { label: 'Wedding',            angle: 140, ig: '', href: PROFILE },
+    { label: 'Teasers',            angle: 60,  ig: '', href: PROFILE },
+    { label: 'Practices',          angle: 110, ig: '', href: PROFILE },
+    { label: 'Reviews',            angle: 80,  ig: '', href: PROFILE },
+    { label: 'Events',             angle: 150, ig: '', href: PROFILE },
+    { label: 'Celeb Interactions', angle: 70,  ig: '', href: PROFILE },
+    { label: 'All Posts',          angle: 120, ig: '', href: PROFILE }
   ];
+
+  /* Turn an Instagram permalink into its embeddable player URL.
+     Returns null for anything Instagram refuses to embed (highlights, stories,
+     profile links), so those gracefully fall back to opening in a new tab. */
+  function igEmbedUrl(url) {
+    if (!url) return null;
+    var m = String(url).match(/instagram\.com\/(?:[A-Za-z0-9_.]+\/)?(p|reel|reels|tv)\/([A-Za-z0-9_-]+)/i);
+    if (!m) return null;
+    var type = m[1].toLowerCase() === 'reels' ? 'reel' : m[1].toLowerCase();
+    return 'https://www.instagram.com/' + type + '/' + m[2] + '/embed';
+  }
+
   var grid = $('.watch-grid');
   if (grid) {
     WATCH.forEach(function (item, i) {
+      var embed = igEmbedUrl(item.ig);
       var a = document.createElement('a');
-      a.href = item.href;          // TODO: point each at its specific reel/highlight
+      a.href = item.ig || item.href || PROFILE;
       a.target = '_blank';
       a.rel = 'noopener';
       a.className = 'watch-card';
@@ -68,11 +88,27 @@
         media = '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>';
       }
 
+      // embeddable posts play on-site; everything else opens Instagram
+      var goLabel = embed ? 'Watch here' : 'View on Instagram';
+      var goIcon = embed
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+
       a.innerHTML = media +
-        '<span class="label">' + item.label + '</span>' +
-        '<span class="go">View post' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg></span>';
+        (embed ? '<span class="watch-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' : '') +
+        '<span class="label"></span>' +
+        '<span class="go">' + goLabel + goIcon + '</span>';
+      a.querySelector('.label').textContent = item.label;   // label is data, never markup
       grid.appendChild(a);
+
+      if (embed) {
+        a.setAttribute('aria-haspopup', 'dialog');
+        a.addEventListener('click', function (e) {
+          if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return; // let power users open a new tab
+          e.preventDefault();
+          openWatch(item.label, embed, a.href);
+        });
+      }
 
       // teaser playback: hover on desktop, in-view on touch; paused otherwise
       var vid = a.querySelector('video.teaser');
@@ -312,7 +348,7 @@
     sticky.classList.toggle('show', show);
   }
 
-  function makeModal(modal, closeSel, focusSel) {
+  function makeModal(modal, closeSel, focusSel, onClose) {
     if (!modal) return null;
     var lastFocus = null;
     var api = {
@@ -335,6 +371,7 @@
         if (openModals === 0) document.body.style.overflow = '';
         bgFor(modal).forEach(function (el) { el.inert = false; });
         updateSticky();
+        if (typeof onClose === 'function') onClose();
         var back = (lastFocus && lastFocus.focus && lastFocus !== document.body && lastFocus.offsetParent !== null) ? lastFocus : (sticky || $('.brand'));
         if (back && back.focus) back.focus();
       }
@@ -370,6 +407,34 @@
     // closing the intro (any which way) marks it dismissed so the sticky CTA can appear
     $$('[data-close]', introEl).forEach(function (el) { el.addEventListener('click', function () { introDismissed = true; updateSticky(); }); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && introEl && !introEl.hidden) { introDismissed = true; } });
+  }
+
+  /* ---------- Watch player modal (plays Instagram posts/reels on-site) ----------
+     The Instagram iframe is only created when a tile is clicked, so the page stays
+     fast and no Instagram cookies load for visitors who never open a video. */
+  var watchModal = makeModal($('#watchModal'), '[data-close-watch]', '.modal-close', function () {
+    var stage = $('#watchStage');
+    if (stage) stage.innerHTML = '';   // unload the iframe so the video stops
+  });
+
+  function openWatch(label, embedUrl, permalink) {
+    var stage = $('#watchStage');
+    var title = $('#watchModalTitle');
+    var link = $('#watchOpenLink');
+    if (title) title.textContent = label;
+    if (link) link.href = permalink || PROFILE;
+    if (stage) {
+      stage.innerHTML = '';
+      var f = document.createElement('iframe');
+      f.src = embedUrl;
+      f.title = label + ' on Instagram';
+      f.setAttribute('scrolling', 'no');
+      f.setAttribute('frameborder', '0');
+      f.setAttribute('allowfullscreen', '');
+      f.setAttribute('allow', 'autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share');
+      stage.appendChild(f);
+    }
+    if (watchModal) watchModal.open();
   }
 
   /* ---------- Enquiry modal + Google Sheets submission ---------- */

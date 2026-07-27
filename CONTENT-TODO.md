@@ -43,16 +43,37 @@ The whole site is wired to a single config block. Fill these in and the features
   `CONFIG.LOGO_VIDEO_SRC = 'logo-motion.mp4'`. Poster falls back to the current `logo-mark.png`, so it never
   looks broken.
 
-## 4. Watch / "See it live" teasers - low urgency
+## 4. Watch / "See it live" - just paste your Instagram links
 
-- **What it is:** The tiles support a short **teaser video loop** OR a **cover image**, and each links to the
-  full post. Right now they're flame-gradient placeholders linking to the Instagram profile, plus buttons to
-  Instagram and YouTube below the grid.
-- **Recommended approach (my pick):** upload short 5-10s **teasers** (muted, looping) to the site and link
-  each tile to the full reel on Instagram/YouTube. Motion pulls the eye far better than a static image, the
-  page stays light, and the full videos still drive follows/subscribers where the algorithm rewards them.
-- **What to send me:** per tile, a short MP4 teaser (or a cover image, portrait 3:4) and the direct
-  reel/highlight link. I'll drop them into the `WATCH` array in `script.js`.
+**Nothing to download or re-upload.** Open `script.js`, find the `WATCH` list near the top, and paste each
+section's Instagram link into its `ig: ''`. That is the whole job.
+
+```js
+{ label: 'Dance Reels', angle: 95, ig: 'https://www.instagram.com/reel/XXXXXXXXX/', href: PROFILE },
+```
+
+What happens depends on the kind of link, automatically:
+
+| Link you paste | What the visitor gets |
+|---|---|
+| A **post** or **reel** (`instagram.com/p/...` or `/reel/...`) | Tile shows a play badge and says "Watch here". Clicking **plays the video inside your website** in a pop-up player, with "Open on Instagram" and "Book your first session" underneath. |
+| A **Highlight** (`instagram.com/stories/highlights/...`) or a profile link | Tile says "View on Instagram" and opens Instagram in a new tab. |
+
+**Important:** Instagram does **not** allow Story Highlights to be embedded anywhere, by anyone. Only
+permanent posts and reels can play on-site. So if a section of yours is a Highlight, either paste the link
+anyway (it will open Instagram, which is the best available behaviour) or give me the link to one strong
+**reel** that represents that section and it will play on the site instead.
+
+Two more things worth knowing:
+
+- The post must be **public** for the on-site player to work.
+- The Instagram player is Instagram's own white card, and it needs one click to start (Instagram blocks
+  autoplay for embeds). If you ever want a fully seamless, autoplaying, on-brand tile, that is the one case
+  where a self-hosted file wins: send me a 5-10s MP4 and I will set `video:` on that tile. Totally optional,
+  the embed route needs zero files from you.
+
+Optional per tile: `poster: 'cover.jpg'` for a custom cover image, `video: 'teaser.mp4'` for a looping
+teaser on the tile face. With neither, the on-brand flame gradient shows, which already looks good.
 
 ## 5. Founder photos - action needed
 
@@ -87,3 +108,6 @@ The whole site is wired to a single config block. Fill these in and the features
   short Fitness panel.
 - **Live contact:** email `streetflowdance@gmail.com`, phone `+91 85719 09482`, WhatsApp `wa.me/918571909482`.
 - **YouTube** button now links to `youtube.com/@streetflowdance` (footer + pyramid).
+- **Instagram videos play on the site.** Paste a post/reel link into a tile's `ig:` and it opens in an on-site
+  player, no downloading or re-uploading. Highlights and profile links fall back to opening Instagram. The
+  player loads only when a tile is clicked, so the page stays fast and sets no Instagram cookies otherwise.
