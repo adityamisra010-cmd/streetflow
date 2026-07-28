@@ -124,12 +124,6 @@
       <h2 id="enquiryTitle" class="modal-title display">Let's get you moving.</h2>
       <p class="modal-lead">Tell us a little about you. It takes 20 seconds, and we'll WhatsApp you within 24 hours. No spam, no pressure, just the next step.</p>
 
-      <ul class="enquiry-proof mono" aria-hidden="true">
-        <li><b>700+</b> dancers trained</li>
-        <li><b>25+</b> weddings</li>
-        <li><b>Small batches</b>, limited slots</li>
-      </ul>
-
       <form class="enquiry-form" id="enquiryForm" novalidate>
         <!-- honeypot: humans never see it; bots fill it and get dropped -->
         <div class="hp" aria-hidden="true"><label>Leave this empty<input type="text" name="company" tabindex="-1" autocomplete="off"></label></div>
@@ -139,25 +133,90 @@
           <input id="ef-name" name="name" type="text" autocomplete="name" required placeholder="First name is enough">
         </div>
 
-        <div class="field-row">
-          <div class="field">
-            <label for="ef-phone">Phone / WhatsApp <span class="req">*</span></label>
-            <input id="ef-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="+91">
+        <div class="field">
+          <label for="ef-phone">Phone Number (with Country Code) <span class="req">*</span></label>
+          <div class="phone-row">
+            <select id="ef-cc" name="country_code" aria-label="Country dialling code">
+              <option value="+91" selected>India (+91)</option>
+              <option value="+93">Afghanistan (+93)</option>
+              <option value="+61">Australia (+61)</option>
+              <option value="+43">Austria (+43)</option>
+              <option value="+973">Bahrain (+973)</option>
+              <option value="+880">Bangladesh (+880)</option>
+              <option value="+32">Belgium (+32)</option>
+              <option value="+975">Bhutan (+975)</option>
+              <option value="+55">Brazil (+55)</option>
+              <option value="+1">Canada (+1)</option>
+              <option value="+86">China (+86)</option>
+              <option value="+357">Cyprus (+357)</option>
+              <option value="+420">Czechia (+420)</option>
+              <option value="+45">Denmark (+45)</option>
+              <option value="+20">Egypt (+20)</option>
+              <option value="+358">Finland (+358)</option>
+              <option value="+33">France (+33)</option>
+              <option value="+49">Germany (+49)</option>
+              <option value="+30">Greece (+30)</option>
+              <option value="+852">Hong Kong (+852)</option>
+              <option value="+36">Hungary (+36)</option>
+              <option value="+62">Indonesia (+62)</option>
+              <option value="+353">Ireland (+353)</option>
+              <option value="+972">Israel (+972)</option>
+              <option value="+39">Italy (+39)</option>
+              <option value="+81">Japan (+81)</option>
+              <option value="+254">Kenya (+254)</option>
+              <option value="+965">Kuwait (+965)</option>
+              <option value="+60">Malaysia (+60)</option>
+              <option value="+960">Maldives (+960)</option>
+              <option value="+230">Mauritius (+230)</option>
+              <option value="+52">Mexico (+52)</option>
+              <option value="+977">Nepal (+977)</option>
+              <option value="+31">Netherlands (+31)</option>
+              <option value="+64">New Zealand (+64)</option>
+              <option value="+234">Nigeria (+234)</option>
+              <option value="+47">Norway (+47)</option>
+              <option value="+968">Oman (+968)</option>
+              <option value="+92">Pakistan (+92)</option>
+              <option value="+63">Philippines (+63)</option>
+              <option value="+48">Poland (+48)</option>
+              <option value="+351">Portugal (+351)</option>
+              <option value="+974">Qatar (+974)</option>
+              <option value="+7">Russia (+7)</option>
+              <option value="+966">Saudi Arabia (+966)</option>
+              <option value="+65">Singapore (+65)</option>
+              <option value="+27">South Africa (+27)</option>
+              <option value="+82">South Korea (+82)</option>
+              <option value="+34">Spain (+34)</option>
+              <option value="+94">Sri Lanka (+94)</option>
+              <option value="+46">Sweden (+46)</option>
+              <option value="+41">Switzerland (+41)</option>
+              <option value="+886">Taiwan (+886)</option>
+              <option value="+255">Tanzania (+255)</option>
+              <option value="+66">Thailand (+66)</option>
+              <option value="+90">Turkey (+90)</option>
+              <option value="+256">Uganda (+256)</option>
+              <option value="+971">UAE (+971)</option>
+              <option value="+44">United Kingdom (+44)</option>
+              <option value="+1">United States (+1)</option>
+              <option value="+84">Vietnam (+84)</option>
+              <option value="+260">Zambia (+260)</option>
+            </select>
+            <input id="ef-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" required placeholder="Your number">
           </div>
-          <div class="field">
-            <label for="ef-email">Email <span class="opt">(optional)</span></label>
-            <input id="ef-email" name="email" type="email" autocomplete="email" placeholder="you@email.com">
-          </div>
+        </div>
+
+        <div class="field">
+          <label for="ef-email">Email <span class="req">*</span></label>
+          <input id="ef-email" name="email" type="email" autocomplete="email" required placeholder="you@email.com">
         </div>
 
         <div class="field-row">
           <div class="field field-sm">
-            <label for="ef-age">Age <span class="opt">(optional)</span></label>
-            <input id="ef-age" name="age" type="number" min="3" max="99" inputmode="numeric" placeholder="e.g. 24">
+            <label for="ef-age">Age <span class="req">*</span></label>
+            <input id="ef-age" name="age" type="number" min="3" max="99" inputmode="numeric" required placeholder="e.g. 24">
           </div>
           <div class="field">
-            <label for="ef-location">Location <span class="opt">(optional)</span></label>
-            <input id="ef-location" name="location" type="text" autocomplete="address-level2" placeholder="Pune / online / your city">
+            <label for="ef-location">Location <span class="req">*</span></label>
+            <input id="ef-location" name="location" type="text" autocomplete="address-level2" required placeholder="Pune / online / your city">
           </div>
         </div>
 
@@ -170,18 +229,6 @@
             <option>Online Batches</option>
             <option>Wedding &amp; Event Choreography</option>
             <option>Not sure yet, help me choose</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="ef-sessions">How many sessions? <span class="opt">(optional)</span></label>
-          <select id="ef-sessions" name="sessions">
-            <option value="" disabled selected>No idea yet is fine</option>
-            <option>Just trying it out</option>
-            <option>1 to 4 sessions</option>
-            <option>5 to 8 sessions</option>
-            <option>Ongoing / monthly batch</option>
-            <option>A full wedding package</option>
           </select>
         </div>
 
@@ -205,7 +252,7 @@
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M20 6L9 17l-5-5"/></svg>
       </div>
       <h2 class="display" id="successHeading" tabindex="-1">You're in.</h2>
-      <p>Got it. We'll WhatsApp you within 24 hours to lock your slot. While you wait, come see the crew move:</p>
+      <p>Got it. We'll WhatsApp you within 24 hours to book your slot. While you wait, come see the crew move:</p>
       <div class="pyramid-base success-links">
         <a class="btn btn-social" href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1"/></svg>
@@ -216,7 +263,7 @@
           YouTube
         </a>
       </div>
-      <button class="btn btn-ghost success-close" type="button" data-close-enquiry>Back to the site</button>
+      <button class="btn btn-light success-home" type="button">Go Back to Home Screen</button>
     </div>
   </div>
 </div>
@@ -263,7 +310,7 @@
           <li style="--i:2"><b class="display hero-num" data-count="50" data-suffix="+">0</b><span class="mono">events</span></li>
           <li style="--i:3"><b class="display hero-num" data-count="2024">0</b><span class="mono">since</span></li>
         </ul>
-        <p class="hero-sub">Join 700+ dancers who started exactly where you are. Learn from founders with 20+ years on the floor, in-studio in Pune or live online, anywhere in the world. No experience needed. No pressure. Just your first session.</p>
+        <p class="hero-sub">Join 700+ dancers who started exactly where you are. Learn from founders with 20+ years on the floor, at the comfort of your doorstep in Pune or live online anywhere in the world. No experience needed. No pressure. Just your first session.</p>
         <div class="hero-cta">
           <button class="btn btn-primary" type="button" data-enquire>Book your first session</button>
           <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost">Follow @streetflowdance</a>
@@ -294,8 +341,8 @@
 
   <div class="marquee-band mono" aria-hidden="true">
     <div class="marquee-track">
-      <span>Dance Reels</span><span>Wedding</span><span>Teasers</span><span>Practices</span><span>Reviews</span><span>Events</span><span>Celeb Interactions</span>
-      <span>Dance Reels</span><span>Wedding</span><span>Teasers</span><span>Practices</span><span>Reviews</span><span>Events</span><span>Celeb Interactions</span>
+      <span>Baraat Sets</span><span>Corporate Events</span><span>Custom Choreographies</span><span>Event Choreographies</span><span>Fitness Sessions</span><span>Functions &amp; Programs</span><span>Instagram Dance Reels</span><span>Kids Dance Classes</span><span>Ladies Dance Batches</span><span>Live Online Batches</span><span>Normal Zumba Classes</span><span>Personal Dance Classes</span><span>Regular Dance Batches</span><span>Sangeet Night Preparations</span><span>Stage Performances</span><span>Video Tutorials</span><span>Workshops</span>
+      <span>Baraat Sets</span><span>Corporate Events</span><span>Custom Choreographies</span><span>Event Choreographies</span><span>Fitness Sessions</span><span>Functions &amp; Programs</span><span>Instagram Dance Reels</span><span>Kids Dance Classes</span><span>Ladies Dance Batches</span><span>Live Online Batches</span><span>Normal Zumba Classes</span><span>Personal Dance Classes</span><span>Regular Dance Batches</span><span>Sangeet Night Preparations</span><span>Stage Performances</span><span>Video Tutorials</span><span>Workshops</span>
     </div>
   </div>
 
@@ -351,7 +398,7 @@
           Dance Styles <span class="track-count" id="count-dance">26</span>
         </button>
         <button class="track-tab" role="tab" id="tab-fitness" aria-selected="false" aria-controls="panel-fitness" tabindex="-1">
-          Fitness Sessions <span class="track-count" id="count-fitness">10</span>
+          Fitness Sessions <span class="track-count" id="count-fitness">12</span>
         </button>
         <span class="track-underline" aria-hidden="true"></span>
       </div>
@@ -372,10 +419,11 @@
 
       <div class="track-panel" id="panel-fitness" role="tabpanel" aria-labelledby="tab-fitness" tabindex="0" hidden>
         <ul class="chip-grid" data-track="fitness">
-          <li class="chip">Aerobics</li><li class="chip">Circuits</li><li class="chip">Bollyhop</li>
-          <li class="chip">Crossfit</li><li class="chip">Zumba</li><li class="chip">Functional Workout</li>
-          <li class="chip">Freestyle Hip-Hop</li><li class="chip">Bhangra &amp; Folk</li><li class="chip">Pilates</li>
-          <li class="chip">Stretching</li><li class="chip chip-more">…and many more</li>
+          <li class="chip">Aerobics</li><li class="chip">Bhangra &amp; Folk</li><li class="chip">Body Weight Exercises</li>
+          <li class="chip">Bollyhop</li><li class="chip">Circuits</li><li class="chip">Crossfit</li>
+          <li class="chip">Freestyle Hip-Hop</li><li class="chip">Functional Workout</li><li class="chip">Pilates</li>
+          <li class="chip">Stretching</li><li class="chip">Weight Training</li><li class="chip">Zumba</li>
+          <li class="chip chip-more">…and many more</li>
         </ul>
       </div>
     </div>
@@ -397,7 +445,13 @@
       <span class="eyebrow mono founders-eyebrow" data-reveal>Meet the founders</span>
       <div class="founders-grid">
         <article class="founder-card" data-reveal style="--d:0ms">
-          <div class="founder-photo" data-todo="photo-anuj" aria-hidden="true"><span class="founder-initials display">AC</span></div>
+          <div class="founder-media">
+            <div class="founder-photo" data-todo="photo-anuj" aria-hidden="true"><span class="founder-initials display">AC</span></div>
+            <a class="founder-ig" href="https://www.instagram.com/_anuj_chopra?igsh=MW0zZHRybW1ib3M2aw==" target="_blank" rel="noopener" aria-label="Anuj Chopra on Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+              <span>Instagram</span>
+            </a>
+          </div>
           <div class="founder-body">
             <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
             <h3 class="founder-name display">Anuj Chopra</h3>
@@ -411,7 +465,13 @@
         </article>
 
         <article class="founder-card" data-reveal style="--d:140ms">
-          <div class="founder-photo" data-todo="photo-anuja" aria-hidden="true"><span class="founder-initials display">AV</span></div>
+          <div class="founder-media">
+            <div class="founder-photo" data-todo="photo-anuja" aria-hidden="true"><span class="founder-initials display">AV</span></div>
+            <a class="founder-ig" href="https://www.instagram.com/no_pretence?igsh=MW96ZHdwc3VwN2w3OA%3D%3D&amp;utm_source=qr" target="_blank" rel="noopener" aria-label="Anuja VW on Instagram">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+              <span>Instagram</span>
+            </a>
+          </div>
           <div class="founder-body">
             <span class="founder-role mono">Co-Founder · Dancer &amp; Coach</span>
             <h3 class="founder-name display">Anuja VW</h3>

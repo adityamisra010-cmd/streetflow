@@ -289,7 +289,8 @@ button{ font:inherit; cursor:pointer; }
 }
 .marquee-track{
   display:inline-flex;
-  animation:scroll 32s linear infinite;
+  /* duration scales with the length of the list so the pixel speed stays calm */
+  animation:scroll 78s linear infinite;
 }
 .marquee-band:hover .marquee-track{ animation-play-state:paused; }
 @keyframes scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
@@ -479,6 +480,17 @@ footer .fine{ font-size:var(--fs-sm); color:var(--ash); line-height:1.6; }
   transition:border-color .4s var(--ease), transform .4s var(--ease);
 }
 .founder-card:hover{ border-color:var(--line-strong); transform:translateY(-4px); }
+/* photo plus the founder's Instagram link, stacked in the left column */
+.founder-media{ display:flex; flex-direction:column; gap:10px; min-width:0; }
+.founder-ig{
+  display:inline-flex; align-items:center; justify-content:center; gap:7px;
+  padding:8px 12px; border-radius:100px;
+  border:1px solid var(--line-strong); color:var(--ash);
+  font-size:var(--fs-xs); font-weight:600; line-height:1;
+  transition:color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+}
+.founder-ig svg{ width:1.15em; height:1.15em; flex:none; }
+.founder-ig:hover{ color:var(--ink); background:var(--flow-gradient); border-color:transparent; transform:translateY(-2px); }
 .founder-photo{
   position:relative; aspect-ratio:4/5; border-radius:calc(var(--radius) - 4px); overflow:hidden;
   border:1px solid var(--line-strong);
@@ -537,7 +549,7 @@ footer .fine{ font-size:var(--fs-sm); color:var(--ash); line-height:1.6; }
 @media (max-width:780px){
   /* founders keep sitting side by side, but stack photo over text inside each card */
   .founder-card{ grid-template-columns:1fr; }
-  .founder-photo{ max-width:150px; }
+  .founder-media{ max-width:150px; }
 }
 @media (max-width:600px){
   /* below this a two-up founder column cannot hold a readable paragraph */
@@ -662,6 +674,14 @@ video.brand-mark{ height:34px; width:auto; object-fit:contain; border-radius:4px
 .enquiry-form select:required:invalid{ color:var(--ash-dark); }
 .enquiry-form option{ color:var(--bone); background:var(--ink-2); }
 .enquiry-form textarea{ resize:vertical; min-height:54px; }
+/* country dialling code beside the number */
+.phone-row{ display:flex; gap:10px; align-items:stretch; }
+.phone-row select{ flex:0 0 clamp(118px,34%,168px); width:auto; min-width:0; padding-right:32px; background-position:right 9px center; }
+.phone-row input{ flex:1 1 auto; min-width:0; }
+@media (max-width:420px){
+  .phone-row{ flex-direction:column; }
+  .phone-row select{ flex:1 1 auto; width:100%; }
+}
 .enquiry-form .field.field-error input,
 .enquiry-form .field.field-error select{ border-color:#ff7a90; box-shadow:0 0 0 3px rgba(255,122,144,.15); }
 .hp{ position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }

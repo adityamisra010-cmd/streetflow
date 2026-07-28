@@ -47,12 +47,12 @@
      flame gradient, which already looks good. */
   var PROFILE = CONFIG.INSTAGRAM_URL;
   var WATCH = [
-    { label: 'Dance Reels', angle: 95,  ig: '', href: PROFILE },
-    { label: 'Wedding',     angle: 140, ig: '', href: PROFILE },
-    { label: 'Teasers',     angle: 60,  ig: '', href: PROFILE },
-    { label: 'Practices',   angle: 110, ig: '', href: PROFILE },
-    { label: 'Events',      angle: 150, ig: '', href: PROFILE },
-    { label: 'All Posts',   angle: 120, ig: '', href: PROFILE }
+    { label: 'Dance Reels', angle: 95,  ig: 'https://www.instagram.com/reel/DIOT0EiJPSJ/?igsh=d3o3NTd1c2N2aHN2',        href: PROFILE },
+    { label: 'Wedding',     angle: 140, ig: 'https://www.instagram.com/reel/DZxX4EXtxZr/?igsh=MXJsMTlpdThrdmRyYg==',    href: PROFILE },
+    { label: 'Teasers',     angle: 60,  ig: 'https://www.instagram.com/reel/DLEcJR3ooF7/?igsh=MXZnajdwcXY1aDZ4OQ==',    href: PROFILE },
+    { label: 'Practices',   angle: 110, ig: 'https://www.Instagram.com/reel/DHtDPu2tgFQ/?igsh=enZobmY1bXFqM2pr',        href: PROFILE },
+    { label: 'Events',      angle: 150, ig: 'https://www.instagram.com/reel/DUsuROUjVkD/?igsh=d2J3OGk4bzA4bWxn',        href: PROFILE },
+    { label: 'All Posts',   angle: 120, ig: 'https://www.instagram.com/reel/DTsUyExCdJZ/?igsh=MTEzdGE1cXdwNmFkeg==',    href: PROFILE }
   ];
 
   /* Turn an Instagram permalink into its embeddable player URL.
@@ -510,7 +510,14 @@
     if (!form) return false;
     $$('.field-error', form).forEach(function (f) { f.classList.remove('field-error'); });
     if (enquiryError) { enquiryError.hidden = true; enquiryError.textContent = ''; }
-    var required = [['name', 'your name'], ['phone', 'a phone or WhatsApp number'], ['looking_for', 'what you are looking for']];
+    var required = [
+      ['name', 'your name'],
+      ['phone', 'your phone number'],
+      ['email', 'your email'],
+      ['age', 'your age'],
+      ['location', 'your location'],
+      ['looking_for', 'what you are looking for']
+    ];
     var firstBad = null, msg = '';
     required.forEach(function (pair) {
       var el = form.elements[pair[0]];
@@ -521,9 +528,22 @@
       }
     });
     var email = form.elements['email'];
-    if (!firstBad && email && email.value.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
+    if (!firstBad && email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value.trim())) {
       var ef = email.closest('.field'); if (ef) ef.classList.add('field-error');
-      firstBad = email; msg = 'That email looks off. Check it, or leave it blank.';
+      firstBad = email; msg = 'That email looks off. Please check it.';
+    }
+    var age = form.elements['age'];
+    if (!firstBad && age && age.value.trim()) {
+      var n = Number(age.value);
+      if (!isFinite(n) || n < 3 || n > 99) {
+        var af = age.closest('.field'); if (af) af.classList.add('field-error');
+        firstBad = age; msg = 'Please enter an age between 3 and 99.';
+      }
+    }
+    var phone = form.elements['phone'];
+    if (!firstBad && phone && String(phone.value).replace(/\D/g, '').length < 6) {
+      var pf = phone.closest('.field'); if (pf) pf.classList.add('field-error');
+      firstBad = phone; msg = 'That phone number looks too short. Please check it.';
     }
     if (firstBad) { showEnquiryError(msg); firstBad.focus(); return false; }
     return true;
@@ -548,6 +568,16 @@
     if (form) form.reset();
   }
 
+  // success screen: close the dialog and return the visitor to the top of the site
+  var successHome = $('.success-home');
+  if (successHome) {
+    successHome.addEventListener('click', function () {
+      if (enquiry) enquiry.close();
+      if (history.replaceState) history.replaceState(null, '', '#home');
+      window.scrollTo({ top: 0, behavior: prefersReduced ? 'auto' : 'smooth' });
+    });
+  }
+
   if (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -558,6 +588,13 @@
 
       setSubmitting(true);
       var data = new FormData(form);
+      // store one dialable number, so the sheet keeps working unchanged
+      var ccEl = form.elements['country_code'];
+      var phoneEl = form.elements['phone'];
+      if (ccEl && phoneEl) {
+        var national = String(phoneEl.value).trim().replace(/^\+?0+/, '');
+        data.set('phone', ccEl.value + ' ' + national);
+      }
       data.append('page', location.href);
       data.append('submitted_at', new Date().toISOString());
 

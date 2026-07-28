@@ -58,37 +58,29 @@ No film configured at all? The pop-up shows a tasteful "coming soon" placeholder
   Instagram's whole card (avatar, username, like count) with it, which cannot be shrunk into a logo. Same
   applies to the loading screen.
 
-## 4. Watch / "See it live" - just paste your Instagram links
+## 4. Watch / "See it live" - DONE, your 6 reels are wired in
 
-**Nothing to download or re-upload.** Open `script.js`, find the `WATCH` list near the top, and paste each
-section's Instagram link into its `ig: ''`. That is the whole job.
+All six tiles now point at the reels you sent, and every one of them is an embeddable reel, so each tile
+shows a play badge, says **"Watch here"**, and plays **inside the website** in a pop-up player.
 
-```js
-{ label: 'Dance Reels', angle: 95, ig: 'https://www.instagram.com/reel/XXXXXXXXX/', href: PROFILE },
-```
-
-What happens depends on the kind of link, automatically:
-
-| Link you paste | What the visitor gets |
+| Tile | Reel |
 |---|---|
-| A **post** or **reel** (`instagram.com/p/...` or `/reel/...`) | Tile shows a play badge and says "Watch here". Clicking **plays the video inside your website** in a pop-up player, with "Open on Instagram" and "Book your first session" underneath. |
-| A **Highlight** (`instagram.com/stories/highlights/...`) or a profile link | Tile says "View on Instagram" and opens Instagram in a new tab. |
+| Dance Reels | `reel/DIOT0EiJPSJ` |
+| Wedding | `reel/DZxX4EXtxZr` |
+| Teasers | `reel/DLEcJR3ooF7` |
+| Practices | `reel/DHtDPu2tgFQ` |
+| Events | `reel/DUsuROUjVkD` |
+| All Posts | `reel/DTsUyExCdJZ` |
 
-**Important:** Instagram does **not** allow Story Highlights to be embedded anywhere, by anyone. Only
-permanent posts and reels can play on-site. So if a section of yours is a Highlight, either paste the link
-anyway (it will open Instagram, which is the best available behaviour) or give me the link to one strong
-**reel** that represents that section and it will play on the site instead.
+**One thing worth knowing about the tile faces.** The video plays on click, but the tile itself still shows
+the flame gradient rather than a still from the reel. That is an Instagram restriction, not a choice: their
+thumbnail URLs are signed and expire within hours, so a site cannot legally or reliably display them. Two
+options if you want imagery on the tiles:
 
-Two more things worth knowing:
+- Send me a screenshot per reel (portrait 3:4) and I will set `poster:` on each tile, or
+- Send a 5-10s muted MP4 per tile and I will set `video:`, which loops silently on the tile face.
 
-- The post must be **public** for the on-site player to work.
-- The Instagram player is Instagram's own white card, and it needs one click to start (Instagram blocks
-  autoplay for embeds). If you ever want a fully seamless, autoplaying, on-brand tile, that is the one case
-  where a self-hosted file wins: send me a 5-10s MP4 and I will set `video:` on that tile. Totally optional,
-  the embed route needs zero files from you.
-
-Optional per tile: `poster: 'cover.jpg'` for a custom cover image, `video: 'teaser.mp4'` for a looping
-teaser on the tile face. With neither, the on-brand flame gradient shows, which already looks good.
+Either is optional. The current gradient plus play badge already reads clearly as "press me".
 
 ## 5. Founder photos - action needed
 
@@ -151,3 +143,29 @@ teaser on the tile face. With neither, the on-brand flame gradient shows, which 
 - **Mobile mirrors desktop**: the four hero stats stay on one row, services stay two-up, the watch grid stays
   multi-column, and founder cards keep photo-beside-text. Things only stack where a column would get too
   narrow to read.
+
+---
+
+## Enquiry form changes (this round)
+
+- Removed the promotional strip (700+ dancers / 25+ weddings / limited slots) from the top of the form.
+- **Phone** is now a **country code dropdown plus a number field**, labelled "Phone Number (with Country
+  Code)". 62 countries, India selected by default. The two are joined into one dialable number before it
+  reaches your Sheet, so the `phone` column keeps the same shape (e.g. `+44 7911 123456`). A leading zero is
+  stripped automatically, since it is not used in international format.
+- **Email, Age and Location are now required**, alongside Name, Phone and "What are you looking for".
+  Email format and a 3 to 99 age range are checked, and a number shorter than 6 digits is rejected.
+- Removed the **"How many sessions?"** question. Your Apps Script is untouched, so it keeps working as is;
+  the `sessions` column will simply sit empty from now on. If you want that column gone, delete `'sessions'`
+  from the `FIELDS` array in `google-apps-script.gs` and redeploy.
+- After submitting, the message reads "**to book your slot**", and the button is now
+  "**Go Back to Home Screen**", which closes the form and returns the visitor to the top of the site.
+
+## Other content updates
+
+- Hero paragraph now reads "at the comfort of your doorstep in Pune or live online anywhere in the world".
+- Fitness Sessions is alphabetical and gained **Body Weight Exercises** and **Weight Training** (12 total,
+  and the tab counter was updated to match).
+- The scrolling white band now lists your 17 services alphabetically. Its animation duration was raised from
+  32s to 78s so the longer list scrolls at the same calm speed as before.
+- Both founders have a clickable **Instagram** button under their photo, matching in placement and style.
