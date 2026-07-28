@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Street Flow - which reels can be embedded?</title>
+<style>
+  body{ margin:0; background:#0b0b0c; color:#ede7d8; font:15px/1.6 system-ui, sans-serif; padding:28px 20px 60px; }
+  h1{ font-size:22px; margin:0 0 6px; }
+  p.lead{ color:#9a968c; max-width:70ch; margin:0 0 6px; }
+  ol{ color:#9a968c; max-width:70ch; }
+  .grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:20px; margin-top:26px; }
+  .card{ border:1px solid rgba(237,231,216,.18); border-radius:14px; overflow:hidden; background:#131315; }
+  .top{ display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:12px 14px; border-bottom:1px solid rgba(237,231,216,.12); }
+  .name{ font-weight:700; }
+  .code{ font-family:ui-monospace,monospace; font-size:12px; color:#9a968c; }
+  .stage{ height:520px; background:#fff; }
+  .stage iframe{ width:100%; height:100%; border:0; display:block; }
+  .foot{ padding:10px 14px; font-size:13px; }
+  .foot a{ color:#f4a93b; }
+  .verdict{ display:flex; gap:8px; margin-top:8px; }
+  .verdict button{ flex:1; padding:8px; border-radius:8px; border:1px solid rgba(237,231,216,.25); background:transparent; color:#ede7d8; font:inherit; font-size:13px; cursor:pointer; }
+  .verdict button.on{ background:#f4a93b; color:#0b0b0c; border-color:transparent; font-weight:700; }
+  #summary{ margin-top:30px; padding:16px; border:1px dashed rgba(237,231,216,.3); border-radius:12px; white-space:pre-wrap; font-family:ui-monospace,monospace; font-size:13px; }
+</style>
+</head>
+<body>
+
+<h1>Which reels will play inside the website?</h1>
+<p class="lead">Instagram decides this, not the site. A reel with licensed music (or one that is restricted)
+refuses to embed, and its player sends visitors to instagram.com instead. This page loads all six the exact
+same way the website does, so you can see which ones actually play.</p>
+<ol>
+  <li>Wait for all six to load.</li>
+  <li>Press play inside each one.</li>
+  <li>Mark it <b>Plays</b> if the video plays right here, or <b>Blocked</b> if it goes to Instagram or shows an error.</li>
+  <li>Send me the summary at the bottom.</li>
+</ol>
+
+<div class="grid" id="grid"></div>
+<div id="summary">Mark each reel above and the summary will appear here.</div>
+
+<script>
+const REELS = [
+  { label:'Dance Reels', url:'https://www.instagram.com/reel/DIOT0EiJPSJ/' },
+  { label:'Wedding',     url:'https://www.instagram.com/reel/DZxX4EXtxZr/' },
+  { label:'Teasers',     url:'https://www.instagram.com/reel/DLEcJR3ooF7/' },
+  { label:'Practices',   url:'https://www.instagram.com/reel/DHtDPu2tgFQ/' },
+  { label:'Events',      url:'https://www.instagram.com/reel/DUsuROUjVkD/' },
+  { label:'All Posts',   url:'https://www.instagram.com/reel/DTsUyExCdJZ/' }
+];
+
+const verdicts = {};
+const grid = document.getElementById('grid');
+
+REELS.forEach((r, i) => {
+  const code = r.url.split('/reel/')[1].replace(/\/$/, '');
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML =
+    '<div class="top"><span class="name"></span><span class="code">' + code + '</span></div>' +
+    '<div class="stage"><iframe src="' + r.url + 'embed" scrolling="no" allowfullscreen ' +
+    'allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"></iframe></div>' +
+    '<div class="foot"><a href="' + r.url + '" target="_blank" rel="noopener">Open on Instagram</a>' +
+    '<div class="verdict"><button data-v="plays">Plays here</button><button data-v="blocked">Blocked</button></div></div>';
+  card.querySelector('.name').textContent = r.label;
+  card.querySelectorAll('.verdict button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      verdicts[r.label] = btn.dataset.v;
+      card.querySelectorAll('.verdict button').forEach(b => b.classList.toggle('on', b === btn));
+      render();
+    });
+  });
+  grid.appendChild(card);
+});
+
+function render() {
+  const plays = REELS.filter(r => verdicts[r.label] === 'plays').map(r => r.label);
+  const blocked = REELS.filter(r => verdicts[r.label] === 'blocked').map(r => r.label);
+  document.getElementById('summary').textContent =
+    'PLAYS ON SITE (' + plays.length + '): ' + (plays.join(', ') || 'none') + '\n' +
+    'BLOCKED BY INSTAGRAM (' + blocked.length + '): ' + (blocked.join(', ') || 'none') +
+    '\n\nSend these two lines back and I will set the blocked ones to open Instagram cleanly,' +
+    '\nor swap in a replacement reel that does embed.';
+}
+</script>
+
+</body>
+</html>

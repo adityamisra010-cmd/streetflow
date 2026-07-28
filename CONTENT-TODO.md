@@ -84,6 +84,24 @@ cropped so their avatar bar and like bar sit outside the tile. Nothing to upload
 - If the crop ever sits slightly high or low, nudge `TILE_PREVIEW_HEADER` (currently `54`) in the same block.
   That is the height of Instagram's chrome above the video.
 
+### Some reels will not play on the site, and that is Instagram's call
+
+If a tile sends you to Instagram instead of playing, the site is not at fault: all six links are parsed and
+wired identically. Instagram refuses to embed certain reels, most often ones using licensed music, and its
+own player then bounces the viewer to instagram.com.
+
+**To find out which ones:** open `embed-check.html` (in this repo, not linked from the site) in a browser.
+It loads all six exactly as the site does. Press play in each, mark it Plays or Blocked, and send me the
+summary it prints. For every blocked reel I will either:
+
+- swap in a replacement reel that does embed, or
+- move that tile to a clean "View on Instagram" link, so it behaves consistently instead of opening a player
+  that cannot play. (That is a two-word change per tile: clear its `ig:` and put the link in `href:`.)
+
+**The only way to get all six playing reliably on the site** is to not depend on Instagram: send me a short
+MP4 per reel and I will set `video:` on those tiles. Then they play inline, loop silently on the tile face,
+and no third party can block them.
+
 **Want a guaranteed-quality preview instead?** Send me either a screenshot per reel (portrait 3:4) or a
 5-10s muted MP4 per reel. I will set `poster:` or `video:` on the tiles, which is faster than the embed,
 fully on-brand, needs no third party, and in the MP4 case actually loops silently on the tile face. That is
