@@ -26,7 +26,16 @@
 
     // Social destinations (used by buttons + success screen).
     INSTAGRAM_URL: 'https://www.instagram.com/streetflowdance/',
-    YOUTUBE_URL: 'https://youtube.com/@streetflowdance'
+    YOUTUBE_URL: 'https://youtube.com/@streetflowdance',
+
+    // Show each reel's real cover frame inside its "See it live" tile, using
+    // Instagram's own embed cropped to hide their chrome. Costs nothing to set
+    // up, but it does load one Instagram frame per visible tile.
+    // Set to false to go back to the plain flame-gradient tiles.
+    TILE_PREVIEWS: true,
+    // Pixels of Instagram chrome (avatar + username bar) above the video in
+    // their embed. Nudge this if the crop ever sits high or low.
+    TILE_PREVIEW_HEADER: 54
   };
 
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -66,6 +75,55 @@
     return 'https://www.instagram.com/' + type + '/' + m[2] + '/embed';
   }
 
+  /* Tile previews are a nice-to-have, so skip them when the visitor is on a
+     metered or slow connection rather than spending their data on decoration. */
+  function previewsAllowed() {
+    var c = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    if (!c) return true;
+    if (c.saveData) return false;
+    return !/(^|-)(2g|slow-2g)$/.test(c.effectiveType || '');
+  }
+
+  /* Instagram's embed is a card: chrome on top, then the video, then a like bar.
+     We scale it up and pull it into place so only the video fills the tile. */
+  function fitTilePreview(box) {
+    var frame = box.querySelector('iframe');
+    if (!frame) return;
+    var w = box.clientWidth, h = box.clientHeight;
+    if (!w || !h) return;
+    var IW = 400;                                   // css width we render the embed at
+    var HEAD = CONFIG.TILE_PREVIEW_HEADER || 54;    // chrome above the video
+    var MEDIA = IW * 16 / 9;                        // reels are 9:16
+    var s = Math.max(w / IW, h / MEDIA);            // cover the tile
+    frame.style.width = IW + 'px';
+    frame.style.height = (HEAD + MEDIA + 90) + 'px';
+    frame.style.transformOrigin = 'top left';
+    frame.style.transform = 'scale(' + s + ')';
+    frame.style.left = ((w - IW * s) / 2) + 'px';
+    frame.style.top = ((h - MEDIA * s) / 2 - HEAD * s) + 'px';
+  }
+
+  function mountTilePreview(box) {
+    if (box.dataset.mounted) return;
+    box.dataset.mounted = '1';
+    var frame = document.createElement('iframe');
+    frame.src = box.getAttribute('data-embed');
+    frame.setAttribute('scrolling', 'no');
+    frame.setAttribute('frameborder', '0');
+    frame.setAttribute('tabindex', '-1');           // never a focus stop, it is decoration
+    frame.setAttribute('aria-hidden', 'true');
+    frame.setAttribute('loading', 'lazy');
+    frame.title = '';
+    frame.addEventListener('load', function () {
+      fitTilePreview(box);
+      box.classList.add('is-ready');
+      var card = box.closest('.watch-card');
+      if (card) card.classList.add('has-cover');
+    });
+    box.appendChild(frame);
+    fitTilePreview(box);
+  }
+
   var grid = $('.watch-grid');
   if (grid) {
     WATCH.forEach(function (item, i) {
@@ -96,6 +154,11 @@
         ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
         : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
 
+      // real cover frame from Instagram, cropped into the tile. The gradient
+      // above stays underneath, so if Instagram never loads nothing looks broken.
+      var wantsPreview = embed && CONFIG.TILE_PREVIEWS && !item.video && !item.poster && previewsAllowed();
+      if (wantsPreview) media += '<span class="tile-embed" data-embed="' + embed + '"></span>';
+
       a.innerHTML = media +
         (embed ? '<span class="watch-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' : '') +
         '<span class="label"></span>' +
@@ -119,6 +182,25 @@
         a.addEventListener('mouseleave', function () { vid.pause(); });
       }
     });
+
+    // mount each cover only as its tile approaches the viewport
+    var previewBoxes = $$('.tile-embed', grid);
+    if (previewBoxes.length) {
+      var po = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          mountTilePreview(e.target);
+          po.unobserve(e.target);
+        });
+      }, { rootMargin: '300px 0px' });
+      previewBoxes.forEach(function (box) { po.observe(box); });
+
+      var rTick;
+      window.addEventListener('resize', function () {
+        clearTimeout(rTick);
+        rTick = setTimeout(function () { previewBoxes.forEach(fitTilePreview); }, 150);
+      });
+    }
 
     // autoplay teasers while on screen (touch devices), respecting reduced motion
     if (!prefersReduced) {

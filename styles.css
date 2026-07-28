@@ -731,6 +731,24 @@ video.brand-mark{ height:34px; width:auto; object-fit:contain; border-radius:4px
 .watch-card.has-media .go{ color:rgba(237,231,216,.92); }
 .watch-cta{ display:flex; gap:14px; justify-content:center; margin-top:44px; flex-wrap:wrap; }
 
+/* the reel's own cover frame, cropped into the tile.
+   pointer-events:none keeps the click on the tile, so it still opens the player.
+   It fades in only once loaded; until then the flame gradient shows through. */
+.tile-embed{
+  position:absolute; inset:0; overflow:hidden;
+  pointer-events:none; user-select:none;
+  opacity:0; transition:opacity .7s var(--ease);
+}
+.tile-embed.is-ready{ opacity:1; }
+.tile-embed iframe{ position:absolute; border:0; display:block; }
+/* a touch of contrast so the label and play badge stay readable over any cover */
+.watch-card.has-cover .label,
+.watch-card.has-cover .go{ color:var(--bone); position:relative; z-index:2; }
+.tile-embed.is-ready::after{
+  content:''; position:absolute; inset:0;
+  background:linear-gradient(to top, rgba(8,8,9,.82), rgba(8,8,9,.15) 45%, rgba(8,8,9,.25));
+}
+
 /* play badge on tiles that open the on-site player */
 .watch-play{
   position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);

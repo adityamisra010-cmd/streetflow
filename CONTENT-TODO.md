@@ -72,15 +72,22 @@ shows a play badge, says **"Watch here"**, and plays **inside the website** in a
 | Events | `reel/DUsuROUjVkD` |
 | All Posts | `reel/DTsUyExCdJZ` |
 
-**One thing worth knowing about the tile faces.** The video plays on click, but the tile itself still shows
-the flame gradient rather than a still from the reel. That is an Instagram restriction, not a choice: their
-thumbnail URLs are signed and expire within hours, so a site cannot legally or reliably display them. Two
-options if you want imagery on the tiles:
+**Tile previews are on.** Each tile now shows the reel's own cover frame, pulled from Instagram's embed and
+cropped so their avatar bar and like bar sit outside the tile. Nothing to upload. Two things to know:
 
-- Send me a screenshot per reel (portrait 3:4) and I will set `poster:` on each tile, or
-- Send a 5-10s muted MP4 per tile and I will set `video:`, which loops silently on the tile face.
+- It loads one Instagram frame per tile, but only once that tile is about to scroll into view, and it is
+  skipped entirely on metered or 2G connections. Clicks still open the on-site player, and the flame gradient
+  stays underneath so nothing looks broken while it loads.
+- If a visitor's network blocks Instagram, that tile will render blank-ish instead of the gradient. If you
+  would rather not take that trade, set `TILE_PREVIEWS: false` in `script.js` -> `CONFIG` and the tiles go
+  back to the clean gradient look.
+- If the crop ever sits slightly high or low, nudge `TILE_PREVIEW_HEADER` (currently `54`) in the same block.
+  That is the height of Instagram's chrome above the video.
 
-Either is optional. The current gradient plus play badge already reads clearly as "press me".
+**Want a guaranteed-quality preview instead?** Send me either a screenshot per reel (portrait 3:4) or a
+5-10s muted MP4 per reel. I will set `poster:` or `video:` on the tiles, which is faster than the embed,
+fully on-brand, needs no third party, and in the MP4 case actually loops silently on the tile face. That is
+the strongest version of this section, and it overrides the embed preview automatically.
 
 ## 5. Founder photos - action needed
 
