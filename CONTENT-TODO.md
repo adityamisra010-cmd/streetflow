@@ -194,3 +194,38 @@ the strongest version of this section, and it overrides the embed preview automa
 - The scrolling white band now lists your 17 services alphabetically. Its animation duration was raised from
   32s to 78s so the longer list scrolls at the same calm speed as before.
 - Both founders have a clickable **Instagram** button under their photo, matching in placement and style.
+
+---
+
+## Structure, nav and theming pass (this round)
+
+**Section order** is now: hero (Pune, India) → See It Live → What We Do → What We Teach → Since 2024 →
+Loved By Dancers → About Us → Meet the Founders → Let's Move. "Meet the Founders" was split out of the
+About section into its own `#founders` section so the nav can link straight to it; the two still read as one
+continuous block, exactly as before.
+
+**Nav** now carries eight items in section order: Watch, Services, Styles, Proof, Reviews, About, Founders,
+Contact. Shortened where a full title would crowd the bar; "Proof" maps to the "Proof, in numbers." section
+that carries the "Since 2024" eyebrow. Verified that all eight resolve to a real section, scroll smoothly,
+and land clear of the fixed header, at 821, 900, 1024, 1200 and 1440 px.
+
+**Footer symbol** scaled up from ~54px to ~86px tall, so it reads as the anchor of the footer against the
+wordmark rather than a small mark above it.
+
+**Enquiry form** is now white: black headings, labels, inputs and placeholders, with the brand orange as the
+accent on the eyebrow, focus rings and borders. Two accent values were deepened so they clear WCAG AA on
+white (the raw brand orange only reaches 3.7:1 as small text and under 3:1 as a border). Measured contrast:
+headings and labels 19.7:1, body 9.3:1, eyebrow 4.7:1, fineprint 5.6:1, errors 6.9:1. The success screen's
+white button was inverted to dark so it stays visible.
+
+### One thing I did not change, and why
+
+The brief asked to lift the Email / Phone / WhatsApp text in **Let's Move** for contrast "against the black
+background". That section sits on the **cream panel** (`#ede7d8`), not black, and the values already measured
+**15.95:1** against it, which is far above the 4.5:1 standard. Making them light enough for black would have
+rendered them close to invisible there, so instead I raised the small mono labels (EMAIL / PHONE / WHATSAPP)
+from grey to the same near-black, taking them from 5.74:1 to 15.95:1. Nothing else in that section moved.
+
+If it genuinely looks black on your device, the likely cause is a phone browser's "force dark" mode
+re-darkening the cream panel. The page now declares `color-scheme: dark`, which tells those browsers not to
+re-theme it. Send a screenshot if it persists.

@@ -277,11 +277,13 @@
     <span class="brand-name display">STREET FLOW</span>
   </a>
   <div class="nav-links mono">
+    <a href="#watch">Watch</a>
     <a href="#services">Services</a>
     <a href="#styles">Styles</a>
-    <a href="#about">About</a>
-    <a href="#watch">Watch</a>
+    <a href="#proof">Proof</a>
     <a href="#reviews">Reviews</a>
+    <a href="#about">About</a>
+    <a href="#founders">Founders</a>
     <a href="#contact">Contact</a>
   </div>
   <button class="nav-toggle" id="navToggle" aria-label="Open menu" aria-controls="mobileMenu" aria-expanded="false">
@@ -290,15 +292,18 @@
 </nav>
 
 <div class="mobile-menu display" id="mobileMenu" aria-hidden="true">
+  <a href="#watch">Watch</a>
   <a href="#services">Services</a>
   <a href="#styles">Styles</a>
-  <a href="#about">About</a>
-  <a href="#watch">Watch</a>
+  <a href="#proof">Proof</a>
   <a href="#reviews">Reviews</a>
+  <a href="#about">About</a>
+  <a href="#founders">Founders</a>
   <a href="#contact">Contact</a>
 </div>
 
 <main id="main" tabindex="-1">
+
 
   <section class="hero" id="home">
     <div class="wrap hero-grid">
@@ -340,12 +345,43 @@
     </div>
   </section>
 
+
   <div class="marquee-band mono" aria-hidden="true">
     <div class="marquee-track">
       <span>Baraat Sets</span><span>Corporate Events</span><span>Custom Choreographies</span><span>Event Choreographies</span><span>Fitness Sessions</span><span>Functions &amp; Programs</span><span>Instagram Dance Reels</span><span>Kids Dance Classes</span><span>Ladies Dance Batches</span><span>Live Online Batches</span><span>Normal Zumba Classes</span><span>Personal Dance Classes</span><span>Regular Dance Batches</span><span>Sangeet Night Preparations</span><span>Stage Performances</span><span>Video Tutorials</span><span>Workshops</span>
       <span>Baraat Sets</span><span>Corporate Events</span><span>Custom Choreographies</span><span>Event Choreographies</span><span>Fitness Sessions</span><span>Functions &amp; Programs</span><span>Instagram Dance Reels</span><span>Kids Dance Classes</span><span>Ladies Dance Batches</span><span>Live Online Batches</span><span>Normal Zumba Classes</span><span>Personal Dance Classes</span><span>Regular Dance Batches</span><span>Sangeet Night Preparations</span><span>Stage Performances</span><span>Video Tutorials</span><span>Workshops</span>
     </div>
   </div>
+
+  <!-- ============ SEE IT LIVE, watch the flow ============ -->
+
+  <section id="watch">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">See it live</span>
+        <h2 class="display">Watch the flow</h2>
+        <p>Short teasers here, full films on Instagram and YouTube. Reels, wedding sets, practice clips and reviews, updated constantly.</p>
+      </div>
+      <div class="watch-grid">
+        <!-- watch cards populated by JS (script.js -> WATCH). Each tile can hold a short teaser loop or a cover image, and links to the full post. -->
+      </div>
+      <div class="watch-cta" data-reveal>
+        <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-ig">
+          <span class="btn-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
+          </span>
+          See more on Instagram
+        </a>
+        <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-yt">
+          <span class="btn-logo" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5.5" width="20" height="13" rx="4" fill="currentColor"/><path d="M10 9.4l5.2 2.6L10 14.6z" fill="var(--ink)"/></svg>
+          </span>
+          Watch on YouTube
+        </a>
+      </div>
+    </div>
+  </section>
+
 
   <section id="services">
     <div class="wrap">
@@ -384,6 +420,7 @@
       </div>
     </div>
   </section>
+
 
   <!-- ============ STYLES & FITNESS, interactive tabbed panel ============ -->
   <section id="styles" class="styles">
@@ -430,7 +467,54 @@
     </div>
   </section>
 
-  <!-- ============ ABOUT, intro + pinned founders/achievements scrolly ============ -->
+
+  <!-- ============ PROOF IN NUMBERS (its own section) ============ -->
+  <section id="proof" class="proof">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">Since 2024</span>
+        <h2 class="display">Proof, in numbers.</h2>
+      </div>
+      <div class="achieve-grid" data-reveal>
+        <div class="achieve-stat"><b class="num display" data-count="700" data-suffix="+">0</b><span>Students trained</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="25" data-suffix="+">0</b><span>Wedding choreographies</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="50" data-suffix="+">0</b><span>Events &amp; performances</span></div>
+        <div class="achieve-stat"><b class="num display" data-count="75" data-suffix="+">0</b><span>Batches &amp; workshops</span></div>
+        <div class="achieve-stat achieve-stat-wide"><b class="num display" data-count="1500" data-suffix="+">0</b><span>Dance classes conducted</span></div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ REVIEWS / TESTIMONIALS (placeholder, real quotes to be added) ============ -->
+  <section id="reviews" class="reviews">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <span class="eyebrow mono">Loved by dancers</span>
+        <h2 class="display">Don't take our word for it.</h2>
+        <p>Real stories from the people who've experienced Street Flow. Genuine feedback from those who've danced with us.</p>
+      </div>
+      <div class="reviews-grid" data-todo="testimonials">
+        <figure class="review-card" data-reveal style="--d:0ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>Your testimonial will live here. Send us 3 to 6 real quotes and we'll drop them straight in, in this exact style.</blockquote>
+          <figcaption><span class="review-name display">Student name</span><span class="review-meta mono">Dance Class · Pune</span></figcaption>
+        </figure>
+        <figure class="review-card" data-reveal style="--d:120ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>A second placeholder quote. Wedding couples, batch students, fitness regulars, we'll feature a mix so every visitor sees someone like them.</blockquote>
+          <figcaption><span class="review-name display">Couple name</span><span class="review-meta mono">Wedding Choreography</span></figcaption>
+        </figure>
+        <figure class="review-card" data-reveal style="--d:240ms">
+          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
+          <blockquote>A third placeholder quote. A screenshot from Instagram or a Google review works too, we'll format it to match.</blockquote>
+          <figcaption><span class="review-name display">Batch member</span><span class="review-meta mono">Online Batch</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ ABOUT US ============ -->
   <section id="about" class="about">
     <div class="wrap">
       <div class="section-head about-head" data-reveal>
@@ -440,8 +524,10 @@
         <p>Through every class, we aim to inspire confidence, creativity, discipline, and a lifelong love for dance. Whether you're dancing for a performance, fitness, fun, self-expression, or to pursue your passion, we focus on building strong fundamentals while ensuring every class is engaging, energetic, and enjoyable.</p>
       </div>
     </div>
+  </section>
 
-    <!-- Founders, side by side -->
+  <!-- ============ MEET THE FOUNDERS ============ -->
+  <section id="founders" class="founders">
     <div class="wrap">
       <span class="eyebrow mono founders-eyebrow" data-reveal>Meet the founders</span>
       <div class="founders-grid">
@@ -488,77 +574,6 @@
     </div>
   </section>
 
-  <!-- ============ PROOF IN NUMBERS (its own section) ============ -->
-  <section id="proof" class="proof">
-    <div class="wrap">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow mono">Since 2024</span>
-        <h2 class="display">Proof, in numbers.</h2>
-      </div>
-      <div class="achieve-grid" data-reveal>
-        <div class="achieve-stat"><b class="num display" data-count="700" data-suffix="+">0</b><span>Students trained</span></div>
-        <div class="achieve-stat"><b class="num display" data-count="25" data-suffix="+">0</b><span>Wedding choreographies</span></div>
-        <div class="achieve-stat"><b class="num display" data-count="50" data-suffix="+">0</b><span>Events &amp; performances</span></div>
-        <div class="achieve-stat"><b class="num display" data-count="75" data-suffix="+">0</b><span>Batches &amp; workshops</span></div>
-        <div class="achieve-stat achieve-stat-wide"><b class="num display" data-count="1500" data-suffix="+">0</b><span>Dance classes conducted</span></div>
-      </div>
-    </div>
-  </section>
-
-  <section id="watch">
-    <div class="wrap">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow mono">See it live</span>
-        <h2 class="display">Watch the flow</h2>
-        <p>Short teasers here, full films on Instagram and YouTube. Reels, wedding sets, practice clips and reviews, updated constantly.</p>
-      </div>
-      <div class="watch-grid">
-        <!-- watch cards populated by JS (script.js -> WATCH). Each tile can hold a short teaser loop or a cover image, and links to the full post. -->
-      </div>
-      <div class="watch-cta" data-reveal>
-        <a href="https://www.instagram.com/streetflowdance/" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-ig">
-          <span class="btn-logo" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor" stroke="none"/></svg>
-          </span>
-          See more on Instagram
-        </a>
-        <a href="https://youtube.com/@streetflowdance" target="_blank" rel="noopener" class="btn btn-ghost btn-brand-yt">
-          <span class="btn-logo" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none"><rect x="2" y="5.5" width="20" height="13" rx="4" fill="currentColor"/><path d="M10 9.4l5.2 2.6L10 14.6z" fill="var(--ink)"/></svg>
-          </span>
-          Watch on YouTube
-        </a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ REVIEWS / TESTIMONIALS (placeholder, real quotes to be added) ============ -->
-  <section id="reviews" class="reviews">
-    <div class="wrap">
-      <div class="section-head" data-reveal>
-        <span class="eyebrow mono">Loved by dancers</span>
-        <h2 class="display">Don't take our word for it.</h2>
-        <p>Real stories from the people who've experienced Street Flow. Genuine feedback from those who've danced with us.</p>
-      </div>
-      <div class="reviews-grid" data-todo="testimonials">
-        <figure class="review-card" data-reveal style="--d:0ms">
-          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
-          <blockquote>Your testimonial will live here. Send us 3 to 6 real quotes and we'll drop them straight in, in this exact style.</blockquote>
-          <figcaption><span class="review-name display">Student name</span><span class="review-meta mono">Dance Class · Pune</span></figcaption>
-        </figure>
-        <figure class="review-card" data-reveal style="--d:120ms">
-          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
-          <blockquote>A second placeholder quote. Wedding couples, batch students, fitness regulars, we'll feature a mix so every visitor sees someone like them.</blockquote>
-          <figcaption><span class="review-name display">Couple name</span><span class="review-meta mono">Wedding Choreography</span></figcaption>
-        </figure>
-        <figure class="review-card" data-reveal style="--d:240ms">
-          <div class="review-stars" aria-label="5 out of 5">★★★★★</div>
-          <blockquote>A third placeholder quote. A screenshot from Instagram or a Google review works too, we'll format it to match.</blockquote>
-          <figcaption><span class="review-name display">Batch member</span><span class="review-meta mono">Online Batch</span></figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
 
   <section class="cta-section" id="contact">
     <div class="wrap" data-reveal>
