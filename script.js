@@ -35,13 +35,7 @@
     TILE_PREVIEWS: true,
     // Pixels of Instagram chrome (avatar + username bar) above the video in
     // their embed. Nudge this if the crop ever sits high or low.
-    TILE_PREVIEW_HEADER: 54,
-
-    // "See it live" photo album: the studio's photos fill the six tiles and
-    // rotate one tile at a time, so all of them get shown. When photos are
-    // present they replace the Instagram previews above.
-    GALLERY_ROTATE: true,      // false = keep the first six photos still
-    GALLERY_INTERVAL: 3500     // ms between tile changes (each tile changes every ~21s)
+    TILE_PREVIEW_HEADER: 54
   };
 
   var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -69,48 +63,6 @@
     { label: 'Events',      angle: 150, ig: 'https://www.instagram.com/reel/DUsuROUjVkD/?igsh=d2J3OGk4bzA4bWxn',        href: PROFILE },
     { label: 'All Posts',   angle: 120, ig: 'https://www.instagram.com/reel/DTsUyExCdJZ/?igsh=MTEzdGE1cXdwNmFkeg==',    href: PROFILE }
   ];
-
-  /* The studio's album. Files live in images/gallery/ as <id>-480/800/1200.webp
-     plus <id>-800.jpg for very old browsers. The first six fill the tiles on
-     load; the rest rotate in. `pos` is the focus point (x% y%) that keeps the
-     people in frame however the tile crops the photo. `w`/`h` are the 800px
-     file's real dimensions. */
-  var GALLERY_DIR = 'images/gallery/';
-  var GALLERY = [
-    { id: 'g01', w: 800, h: 600,  pos: '50% 30%' },
-    { id: 'g02', w: 800, h: 1067, pos: '50% 27%' },
-    { id: 'g03', w: 800, h: 600,  pos: '50% 50%' },
-    { id: 'g04', w: 800, h: 1067, pos: '50% 14%' },
-    { id: 'g05', w: 800, h: 600,  pos: '40% 45%' },
-    { id: 'g06', w: 800, h: 600,  pos: '45% 55%' },
-    { id: 'g07', w: 800, h: 600,  pos: '50% 35%' },
-    { id: 'g08', w: 800, h: 600,  pos: '50% 40%' },
-    { id: 'g09', w: 800, h: 600,  pos: '50% 40%' },
-    { id: 'g10', w: 800, h: 1067, pos: '50% 50%' },
-    { id: 'g11', w: 800, h: 600,  pos: '40% 50%' }
-  ];
-  // Rendered tile width, so the browser picks the right file for the screen.
-  var GALLERY_SIZES = '(max-width:640px) 46vw, (max-width:1440px) 29vw, 22vw';
-
-  function galleryPicture(p, eager) {
-    var pic = document.createElement('picture');
-    pic.className = 'tile-slide';
-    var source = document.createElement('source');
-    source.type = 'image/webp';
-    source.srcset = [480, 800, 1200].map(function (w) { return GALLERY_DIR + p.id + '-' + w + '.webp ' + w + 'w'; }).join(', ');
-    source.sizes = GALLERY_SIZES;
-    var img = document.createElement('img');
-    img.src = GALLERY_DIR + p.id + '-800.jpg';
-    img.width = p.w; img.height = p.h;
-    img.alt = '';                                  // decorative: the tile link carries the name
-    img.decoding = 'async';
-    img.loading = eager ? 'eager' : 'lazy';
-    img.style.objectPosition = p.pos;
-    img.style.transformOrigin = p.pos;             // the slow zoom drifts toward the people
-    pic.appendChild(source);
-    pic.appendChild(img);
-    return pic;
-  }
 
   /* Turn an Instagram permalink into its embeddable player URL.
      Returns null for anything Instagram refuses to embed (highlights, stories,
@@ -173,7 +125,6 @@
   }
 
   var grid = $('.watch-grid');
-  var galleryMode = GALLERY.length >= WATCH.length;   // enough photos to fill every tile
   if (grid) {
     WATCH.forEach(function (item, i) {
       var embed = igEmbedUrl(item.ig);
@@ -184,17 +135,9 @@
       a.className = 'watch-card';
       a.setAttribute('data-reveal', '');
       a.style.setProperty('--d', (i % 4) * 90 + 'ms');
-      // the tiles carry no visible text, so name each link for screen readers
-      a.setAttribute('aria-label', embed
-        ? 'Watch the ' + item.label + ' reel'
-        : 'View ' + item.label + ' on Instagram (opens in a new tab)');
 
       var media = '';
-      if (galleryMode) {
-        // flame gradient stays underneath as the backdrop while a photo loads
-        media = '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>' +
-                '<span class="tile-slides"></span>';
-      } else if (item.video) {
+      if (item.video) {
         a.classList.add('has-media');
         media = '<video class="teaser" src="' + item.video + '" muted loop playsinline preload="metadata"' +
                 (item.poster ? ' poster="' + item.poster + '"' : '') + '></video><span class="scrim"></span>';
@@ -205,14 +148,22 @@
         media = '<div class="bg" style="background:linear-gradient(' + item.angle + 'deg,#ec3f73,#f4a93b ' + (55 + i * 3) + '%,#ffd866)"></div>';
       }
 
-      // real cover frame from Instagram, cropped into the tile. Only used when
-      // there is no photo album; the gradient above stays underneath either way.
-      var wantsPreview = !galleryMode && embed && CONFIG.TILE_PREVIEWS && !item.video && !item.poster && previewsAllowed();
+      // embeddable posts play on-site; everything else opens Instagram
+      var goLabel = embed ? 'Watch here' : 'View on Instagram';
+      var goIcon = embed
+        ? '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 17L17 7M9 7h8v8"/></svg>';
+
+      // real cover frame from Instagram, cropped into the tile. The gradient
+      // above stays underneath, so if Instagram never loads nothing looks broken.
+      var wantsPreview = embed && CONFIG.TILE_PREVIEWS && !item.video && !item.poster && previewsAllowed();
       if (wantsPreview) media += '<span class="tile-embed" data-embed="' + embed + '"></span>';
 
-      // no caption text on the tiles; the play badge marks the ones that play on-site
       a.innerHTML = media +
-        (embed ? '<span class="watch-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' : '');
+        (embed ? '<span class="watch-play" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></span>' : '') +
+        '<span class="label"></span>' +
+        '<span class="go">' + goLabel + goIcon + '</span>';
+      a.querySelector('.label').textContent = item.label;   // label is data, never markup
       grid.appendChild(a);
 
       if (embed) {
@@ -231,73 +182,6 @@
         a.addEventListener('mouseleave', function () { vid.pause(); });
       }
     });
-
-    /* ---------- Photo album: fill the tiles, then rotate ----------
-       Six photos show at once and the rest wait in a queue. Every interval one
-       tile (in a scattered order) crossfades to the next queued photo, and the
-       photo it replaces goes to the back of the queue. So every photo gets its
-       turn and the same photo never shows in two tiles at once. */
-    if (galleryMode) {
-      grid.classList.add('is-gallery');
-      var slots = $$('.tile-slides', grid);
-      var shown = [];                                   // photo index in each tile
-      slots.forEach(function (slot, i) {
-        var pic = galleryPicture(GALLERY[i], false);
-        pic.classList.add('is-active');
-        slot.appendChild(pic);
-        shown.push(i);
-      });
-      var queue = [];
-      for (var qi = slots.length; qi < GALLERY.length; qi++) queue.push(qi);
-
-      if (CONFIG.GALLERY_ROTATE && !prefersReduced && queue.length) {
-        var ORDER = [0, 4, 2, 5, 1, 3];                 // scattered, not a left-to-right sweep
-        var step = 0, busy = false;
-        var hovering = false, focused = false, inView = false;
-        // hold still while someone is looking closely or tabbing through
-        grid.addEventListener('mouseenter', function () { hovering = true; });
-        grid.addEventListener('mouseleave', function () { hovering = false; });
-        grid.addEventListener('focusin', function () { focused = true; });
-        grid.addEventListener('focusout', function () { focused = false; });
-        // and do no work at all while the section is off screen
-        new IntersectionObserver(function (entries) {
-          inView = entries[entries.length - 1].isIntersecting;
-        }, { threshold: 0.15 }).observe(grid);
-
-        var rotateAlbum = function () {
-          if (busy || hovering || focused || !inView || document.hidden || openModals > 0) return;
-          var t = ORDER[step % ORDER.length] % slots.length;
-          step++;
-          var nextIdx = queue.shift();
-          var slot = slots[t];
-          var incoming = galleryPicture(GALLERY[nextIdx], true);
-          var img = incoming.querySelector('img');
-          busy = true;
-          slot.appendChild(incoming);                   // invisible until decoded, so no blank flash
-          var ready = img.decode ? img.decode() : new Promise(function (res, rej) {
-            if (img.complete && img.naturalWidth) res(); else { img.onload = res; img.onerror = rej; }
-          });
-          ready.then(function () {
-            var old = slot.querySelector('.tile-slide.is-active');
-            void incoming.offsetWidth;                  // commit the hidden state so the fade runs
-            incoming.classList.add('is-active');
-            if (old) old.classList.remove('is-active');
-            queue.push(shown[t]);
-            shown[t] = nextIdx;
-            setTimeout(function () {
-              if (old && old.parentNode) old.parentNode.removeChild(old);
-              busy = false;
-            }, 1300);
-          }, function () {
-            // could not load (offline, say): drop it and try again later
-            if (incoming.parentNode) incoming.parentNode.removeChild(incoming);
-            queue.push(nextIdx);
-            busy = false;
-          });
-        };
-        setInterval(rotateAlbum, CONFIG.GALLERY_INTERVAL || 3500);
-      }
-    }
 
     // mount each cover only as its tile approaches the viewport
     var previewBoxes = $$('.tile-embed', grid);
@@ -969,6 +853,30 @@
     if (y) y.textContent = String(new Date().getFullYear());
   })();
 
+  /* ---------- Hero dancer ----------
+     Hold the entrance until the loading screen lifts so visitors actually see it
+     rise, and rest the loop while the hero is off screen. Without JS the dancer
+     simply shows and grooves. */
+  var dancer = $('.sf-dancer');
+  var dancerSvg = dancer && $('.sf-figure', dancer);
+  if (dancerSvg) {
+    // the flame drift is an SVG (SMIL) animation, which CSS reduced-motion rules do not reach
+    if (prefersReduced && dancerSvg.pauseAnimations) dancerSvg.pauseAnimations();
+    dancerSvg.classList.add('is-pending');
+    if (!prefersReduced) {
+      new IntersectionObserver(function (entries) {
+        var on = entries[entries.length - 1].isIntersecting;
+        dancer.classList.toggle('is-paused', !on);
+        if (dancerSvg.pauseAnimations) { if (on) dancerSvg.unpauseAnimations(); else dancerSvg.pauseAnimations(); }
+      }).observe(dancer);
+    }
+  }
+  function revealDancer() {
+    if (!dancerSvg) return;
+    dancerSvg.classList.remove('is-pending');
+    dancerSvg.classList.add('is-in');
+  }
+
   /* ---------- Preloader + auto-intro ---------- */
   var preloader = $('#preloader');
   function maybeShowIntro() {
@@ -986,6 +894,7 @@
     var hidePreloader = function () {
       if (hidden) return; hidden = true;
       preloader.classList.add('done');
+      revealDancer();                 // rises while the loading screen fades out
       setTimeout(function () {
         preloader.style.display = 'none';
         preloaderDone = true;
@@ -996,6 +905,7 @@
     window.addEventListener('load', function () { setTimeout(hidePreloader, prefersReduced ? 120 : 900); });
     setTimeout(hidePreloader, 3500); // safety net if 'load' is slow (e.g. blocked webfonts)
   } else {
+    revealDancer();
     preloaderDone = true;
     updateSticky();
     maybeShowIntro();

@@ -61,8 +61,7 @@ No film configured at all? The pop-up shows a tasteful "coming soon" placeholder
 ## 4. Watch / "See it live" - DONE, your 6 reels are wired in
 
 All six tiles now point at the reels you sent, and every one of them is an embeddable reel, so each tile
-shows a play badge and plays **inside the website** in a pop-up player. The tiles now show **your album
-photos** (see "Photos pass" below) and carry no text labels.
+shows a play badge, says **"Watch here"**, and plays **inside the website** in a pop-up player.
 
 | Tile | Reel |
 |---|---|
@@ -73,10 +72,8 @@ photos** (see "Photos pass" below) and carry no text labels.
 | Events | `reel/DUsuROUjVkD` |
 | All Posts | `reel/DTsUyExCdJZ` |
 
-**Tile previews (only used if the album is ever removed).** While the album photos are in place, the tiles
-show those instead and load nothing from Instagram until clicked. If you empty the `GALLERY` list in
-`script.js`, each tile goes back to showing the reel's own cover frame, pulled from Instagram's embed and
-cropped so their avatar bar and like bar sit outside the tile. Things to know about that mode:
+**Tile previews are on.** Each tile now shows the reel's own cover frame, pulled from Instagram's embed and
+cropped so their avatar bar and like bar sit outside the tile. Nothing to upload. Two things to know:
 
 - It loads one Instagram frame per tile, but only once that tile is about to scroll into view, and it is
   skipped entirely on metered or 2G connections. Clicks still open the on-site player, and the flame gradient
@@ -112,8 +109,8 @@ the strongest version of this section, and it overrides the embed preview automa
 
 ## 5. Founder photos - DONE
 
-Both cards now show the real photos you sent (see "Photos pass" below). The "AC" / "AV" initials stay
-underneath and only appear if a photo ever fails to load.
+Both cards now show the real photos you sent (see "Photos and hero pass" below). The "AC" / "AV" initials
+stay underneath and only appear if a photo ever fails to load.
 
 ## 6. Real testimonials - action needed (placeholder is live)
 
@@ -193,8 +190,8 @@ underneath and only appear if a photo ever fails to load.
 - Hero paragraph now reads "at the comfort of your doorstep in Pune or live online anywhere in the world".
 - Fitness Sessions is alphabetical and gained **Body Weight Exercises** and **Weight Training** (12 total,
   and the tab counter was updated to match).
-- The scrolling white band now lists your 17 services alphabetically. Its animation duration was raised from
-  32s to 78s so the longer list scrolls at the same calm speed as before.
+- The scrolling white band listed your 17 services alphabetically. It now carries your album photos
+  instead (see "Photos and hero pass" below).
 - Both founders have a clickable **Instagram** button under their photo, matching in placement and style.
 
 ---
@@ -234,43 +231,39 @@ re-theme it. Send a screenshot if it persists.
 
 ---
 
-## Photos pass (this round)
+## Photos and hero pass (this round)
 
-**What was converted.** 13 originals (30.7 MB of HEIC, PNG and JPEG) became 52 web files totalling 4.8 MB
-in `images/`. The browser only downloads the one size that fits the screen, so the six album tiles cost
-roughly 260 KB on a laptop and 540 KB on a high-density phone. Each photo was:
+**The See It Live grid is unchanged.** It is exactly as it was before the photos arrived: six tall tiles with
+their names ("Dance Reels", "Wedding", ...), "Watch here", the reel cover previews and the on-site player.
+
+**The moving band is now a photo strip.** The cream band under the hero used to scroll the 17 service names.
+It now scrolls all 11 album photos instead, with no text on it:
+
+- Each photo keeps its own shape (8 wide, 3 tall) at one even height, with rounded corners and even gaps.
+- The strip loops seamlessly and pauses while the pointer is over it. Visitors who have "reduce motion"
+  switched on see it still.
+- To add, remove or reorder photos, edit the `marquee-band` block in `index.html`. The set is written twice
+  (so the loop has no seam); keep both copies identical.
+
+**The hero shows the Street Flow dancer.** The abstract flame squiggle in the hero (there since the first
+version of the site) is replaced by the logo character itself, traced from the logo into a crisp vector so it
+stays sharp on any screen. It rises into view as the loading screen lifts, then dances on a loop: the body
+sways from the tip of the foot with a small dip on every beat, the head nods a moment behind, the flame
+gradient drifts through the figure, and a warm glow on the floor swells on each dip. It rests while the hero
+is scrolled away and stays still for "reduce motion". The gradient dot that sat over the old squiggle now sits
+at the centre of the spinning "PUNE" ring.
+
+**How the photos were prepared.** 13 originals (30.7 MB of HEIC, PNG and JPEG) became web files totalling
+4.8 MB in `images/`. The browser downloads only the size that fits the screen. Each photo was:
 
 - **Colour-converted** from the iPhone's Display P3 to standard sRGB, so colours look the same in every
   browser instead of going flat or oversaturated.
 - **Stripped of all metadata.** 8 of the 13 photos (7 album shots and Anuja's portrait) carried **GPS
   coordinates** of where they were taken, plus camera and phone details. None of that ships to the website.
-- **Resized** with a high-quality filter and a light sharpen, then saved as WebP at three widths (480, 800,
-  1200 px for the album; 300, 400, 600 px for founders) plus one JPEG for very old browsers.
+- **Resized** with a high-quality filter and a light sharpen, then saved as WebP at three widths plus one
+  JPEG for very old browsers.
+- **Cropped where needed.** Anuj's photo was a phone screenshot, so the home-bar strip at the bottom is cut
+  off. Anuja's was a wide travel shot where she was small in the frame, so it is cropped head to mid-thigh.
+  The night garba album shot is zoomed in on the group, and the Independence Day shot drops a head that
+  was blocking the foreground.
 
-**Founder photos.** Both cropped to the 4:5 frame. Anuj's was a phone screenshot, so the home-bar strip at
-the bottom was cut off. Anuja's was a wide travel shot where she was small in the frame, so it is cropped
-head to mid-thigh with her whole head kept in.
-
-**"See it live" album.** All 11 photos are used:
-
-- **Tiles are now landscape (4:3)** instead of tall. 8 of the 11 photos are wide group shots, and a tall
-  tile cut people off at the sides. Every photo has a hand-set focus point so faces stay in frame at every
-  screen size. Two were pre-cropped: the night garba shot is zoomed in on the group, and the Independence
-  Day shot drops a head that was blocking the foreground.
-- **The album moves.** Six photos show at once. Every 3.5 seconds one tile (in a scattered order, not left
-  to right) crossfades to the next photo, so all 11 get their turn, and the same photo never appears in two
-  tiles at once. Each photo also does a slow, subtle push-in.
-- **It stays out of the way.** It pauses while someone hovers or tabs through the tiles, while a video is
-  open, when the section is off screen, and when the browser tab is hidden. Visitors who have "reduce
-  motion" switched on get the six photos still.
-- **Clicking a tile still plays its reel** in the on-site player, exactly as before.
-- **Settings** (`script.js` -> `CONFIG`): `GALLERY_ROTATE: false` keeps the first six photos still;
-  `GALLERY_INTERVAL` sets the time between changes in milliseconds.
-
-**Tile labels removed.** "Dance Reels", "Wedding", "Teasers", "Practices", "Events", "All Posts" and the
-"Watch here" line are gone from the bottom of the tiles, so the photos are clean. Screen readers still hear
-each tile's name. The play badge moved from the centre to the bottom-right corner so it never sits on
-anyone's face. The scrolling white band of services under the header was **not** changed.
-
-**To add or swap album photos later:** send them to me, or run them through the same steps and add a line
-to the `GALLERY` list in `script.js`.
