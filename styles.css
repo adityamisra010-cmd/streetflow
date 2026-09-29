@@ -305,7 +305,7 @@ button{ font:inherit; cursor:pointer; }
   border-radius:50%; background:var(--flow-gradient);
 }
 /* on narrower two-column layouts the dancer's raised arm reaches that corner, so the ring steps out of its way */
-@media (min-width:901px) and (max-width:1100px){
+@media (min-width:901px) and (max-width:1180px){
   .badge{ top:-13%; right:-9%; }
   .badge-core{ top:calc(-13% + 47px); right:calc(-9% + 47px); }
 }
