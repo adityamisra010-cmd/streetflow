@@ -61,7 +61,8 @@ No film configured at all? The pop-up shows a tasteful "coming soon" placeholder
 ## 4. Watch / "See it live" - DONE, your 6 reels are wired in
 
 All six tiles now point at the reels you sent, and every one of them is an embeddable reel, so each tile
-shows a play badge, says **"Watch here"**, and plays **inside the website** in a pop-up player.
+shows a play badge and plays **inside the website** in a pop-up player. The tiles now show **your album
+photos** (see "Photos pass" below) and carry no text labels.
 
 | Tile | Reel |
 |---|---|
@@ -72,8 +73,10 @@ shows a play badge, says **"Watch here"**, and plays **inside the website** in a
 | Events | `reel/DUsuROUjVkD` |
 | All Posts | `reel/DTsUyExCdJZ` |
 
-**Tile previews are on.** Each tile now shows the reel's own cover frame, pulled from Instagram's embed and
-cropped so their avatar bar and like bar sit outside the tile. Nothing to upload. Two things to know:
+**Tile previews (only used if the album is ever removed).** While the album photos are in place, the tiles
+show those instead and load nothing from Instagram until clicked. If you empty the `GALLERY` list in
+`script.js`, each tile goes back to showing the reel's own cover frame, pulled from Instagram's embed and
+cropped so their avatar bar and like bar sit outside the tile. Things to know about that mode:
 
 - It loads one Instagram frame per tile, but only once that tile is about to scroll into view, and it is
   skipped entirely on metered or 2G connections. Clicks still open the on-site player, and the flame gradient
@@ -107,11 +110,10 @@ and no third party can block them.
 fully on-brand, needs no third party, and in the MP4 case actually loops silently on the tile face. That is
 the strongest version of this section, and it overrides the embed preview automatically.
 
-## 5. Founder photos - action needed
+## 5. Founder photos - DONE
 
-- **What it is:** Anuj's and Anuja's cards use flame-tinted initials ("AC" / "AV") as photo placeholders.
-- **Where:** `index.html` founder cards.
-- **What to send me:** one real photo each, portrait 4:5.
+Both cards now show the real photos you sent (see "Photos pass" below). The "AC" / "AV" initials stay
+underneath and only appear if a photo ever fails to load.
 
 ## 6. Real testimonials - action needed (placeholder is live)
 
@@ -229,3 +231,46 @@ from grey to the same near-black, taking them from 5.74:1 to 15.95:1. Nothing el
 If it genuinely looks black on your device, the likely cause is a phone browser's "force dark" mode
 re-darkening the cream panel. The page now declares `color-scheme: dark`, which tells those browsers not to
 re-theme it. Send a screenshot if it persists.
+
+---
+
+## Photos pass (this round)
+
+**What was converted.** 13 originals (30.7 MB of HEIC, PNG and JPEG) became 52 web files totalling 4.8 MB
+in `images/`. The browser only downloads the one size that fits the screen, so the six album tiles cost
+roughly 260 KB on a laptop and 540 KB on a high-density phone. Each photo was:
+
+- **Colour-converted** from the iPhone's Display P3 to standard sRGB, so colours look the same in every
+  browser instead of going flat or oversaturated.
+- **Stripped of all metadata.** 8 of the 13 photos (7 album shots and Anuja's portrait) carried **GPS
+  coordinates** of where they were taken, plus camera and phone details. None of that ships to the website.
+- **Resized** with a high-quality filter and a light sharpen, then saved as WebP at three widths (480, 800,
+  1200 px for the album; 300, 400, 600 px for founders) plus one JPEG for very old browsers.
+
+**Founder photos.** Both cropped to the 4:5 frame. Anuj's was a phone screenshot, so the home-bar strip at
+the bottom was cut off. Anuja's was a wide travel shot where she was small in the frame, so it is cropped
+head to mid-thigh with her whole head kept in.
+
+**"See it live" album.** All 11 photos are used:
+
+- **Tiles are now landscape (4:3)** instead of tall. 8 of the 11 photos are wide group shots, and a tall
+  tile cut people off at the sides. Every photo has a hand-set focus point so faces stay in frame at every
+  screen size. Two were pre-cropped: the night garba shot is zoomed in on the group, and the Independence
+  Day shot drops a head that was blocking the foreground.
+- **The album moves.** Six photos show at once. Every 3.5 seconds one tile (in a scattered order, not left
+  to right) crossfades to the next photo, so all 11 get their turn, and the same photo never appears in two
+  tiles at once. Each photo also does a slow, subtle push-in.
+- **It stays out of the way.** It pauses while someone hovers or tabs through the tiles, while a video is
+  open, when the section is off screen, and when the browser tab is hidden. Visitors who have "reduce
+  motion" switched on get the six photos still.
+- **Clicking a tile still plays its reel** in the on-site player, exactly as before.
+- **Settings** (`script.js` -> `CONFIG`): `GALLERY_ROTATE: false` keeps the first six photos still;
+  `GALLERY_INTERVAL` sets the time between changes in milliseconds.
+
+**Tile labels removed.** "Dance Reels", "Wedding", "Teasers", "Practices", "Events", "All Posts" and the
+"Watch here" line are gone from the bottom of the tiles, so the photos are clean. Screen readers still hear
+each tile's name. The play badge moved from the centre to the bottom-right corner so it never sits on
+anyone's face. The scrolling white band of services under the header was **not** changed.
+
+**To add or swap album photos later:** send them to me, or run them through the same steps and add a line
+to the `GALLERY` list in `script.js`.
